@@ -123,19 +123,19 @@ if( ! function_exists( 'famo_scripts_and_styles ' ) ) {
 	  if (!is_admin()) {
 
 	    // modernizr (without media query polyfill)
-	    wp_register_script( 'famo-modernizr', get_template_directory_uri() . '/js/modernizr.js', array(), '2.6.2', false );
+	    // wp_register_script( 'famo-modernizr', get_template_directory_uri() . '/js/modernizr.js', array(), '2.6.2', false );
 
 	    // register Google font
 	    wp_register_style('google-font', 'http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lora:400,700|Droid+Sans+Mono');
 
 	    // ie-only style sheet
-	    wp_register_style( 'famo-ie-only', get_template_directory_uri() . '/css/ie.css', array(), '' );
+	    // wp_register_style( 'famo-ie-only', get_template_directory_uri() . '/css/ie.css', array(), '' );
 
 	    // comment reply script for threaded comments
-	    if( get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
+	    // if( get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
 	    
-	    // adding Foundation scripts file in the footer
-	    wp_register_script( 'famo-js', get_template_directory_uri() . '/js/foundation.min.js', array( 'jquery' ), '', true );
+	    // adding scripts file in the footer
+	    wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/app.js', '', '', true );
 	    
 	    global $is_IE;
 	    if ($is_IE) {
@@ -143,15 +143,15 @@ if( ! function_exists( 'famo_scripts_and_styles ' ) ) {
 	    }
 
 	    // enqueue styles and scripts
-	    wp_enqueue_script( 'famo-modernizr' );
+	    //wp_enqueue_script( 'famo-modernizr' );
 	    wp_enqueue_style( 'google-font' );
-	    wp_enqueue_style('famo-ie-only');
+	   // wp_enqueue_style('famo-ie-only');
 	    /*
 	    I recommend using a plugin to call jQuery
 	    using the google cdn. That way it stays cached
 	    and your site will load faster.
 	    */
-	    wp_enqueue_script( 'jquery' );
+	    wp_deregister_script('jquery');
 		
 	    wp_enqueue_script( 'famo-js' );
 	    wp_enqueue_script( 'html5shiv' );

@@ -1,4 +1,3 @@
-	</div><!-- Row End -->
 </div><!-- Container End -->
 
 <div class="full-width footer-widget">
@@ -22,11 +21,6 @@
 
 <?php wp_footer(); ?>
 
-<script>
-	(function($) {
-		$(document).foundation();
-	})(jQuery);
-</script>
-	
+
 </body>
 </html>

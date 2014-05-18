@@ -1,2 +1,2 @@
-/*Famo theme */
+/* Famo theme */
 

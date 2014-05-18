@@ -1,31 +1,12 @@
-@import "settings";
+@import 
+    "mixin",
+    "colors",
+    "fonts",
+    "settings";
 @import "foundation";
 
+@import "base",
+        "layout",
+        "modules",
+        "theme";
 
-header {
-  @include grid-row;
-  
-  .logo  { @include grid-column($columns:3, $center:true); }
-  padding-bottom: em-calc(10px);
-
-}
-
-
-.main-content {
-  @include grid-row;
-  
-  aside  {
-    @include grid-column($columns:6);
-    // @media #{$medium-up} {
-    //   @include grid-column($columns:3);
-    // }
-  }
-  
-  article  {
-    @include grid-column($columns:6);
-    // @media #{$medium-up} {
-    //   @include grid-column($columns:8, $offset: 1);
-    // }
-  }
-
-}

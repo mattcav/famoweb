@@ -35,7 +35,6 @@ require_once('lib/nav.php'); // filter default wordpress menu classes and clean 
 5. lib/presstrends.php
     - add PressTrends, tracks how many people are using famo
 */
-require_once('lib/presstrends.php'); // load PressTrends to track the usage of famo across the web, comment this line if you don't want to be tracked
 
 /**********************
 Add theme supports
@@ -105,8 +104,15 @@ foreach ($sidebars as $sidebar) {
 // return entry meta information for posts, used by multiple loops, you can override this function by defining them first in your child theme's functions.php file
 if ( ! function_exists( 'famo_entry_meta' ) ) {
     function famo_entry_meta() {
-        echo '<span class="byline author">'. __('Written by', 'famo') .' <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .', </a></span>';
-        echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. get_the_time('F jS, Y') .'</time>';
+        echo '<span class="byline author"><span class="lowercase">'. __('Written by', 'famo') .'</span> <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .'</a></span>';
+        //echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. get_the_time('F jS, Y') .'</time>';
     }
 };
+
+// remove <p> from images on article 
+function filter_ptags_on_images($content){
+   return preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
+}
+
+add_filter('the_content', 'filter_ptags_on_images');
 ?>

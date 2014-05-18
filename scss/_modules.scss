@@ -1,0 +1,250 @@
+.entry {
+    @include grid-column(
+        $columns:12,
+        $collapse:true
+        );
+
+}
+
+.entry__figure {
+    margin-bottom:2rem;
+    @media #{$medium-up} {
+        margin-bottom:3rem;
+    }
+}
+
+.entry__header {
+    margin: 0 0 1rem;
+}
+
+.entry__title {
+    text-transform:uppercase;
+    line-height:1;
+    span {
+        font-weight:300;
+        &:before {
+            content: "\A";
+            white-space: pre;
+        }
+    }
+}
+
+.entry__excerpt {
+    text-transform:uppercase;
+    margin-top:2rem;
+    font-size:rem-calc(23);
+    line-height:1.2;
+}
+
+.entry__row {
+    @include grid-column(
+        $columns:12,
+        $center:true
+        );
+    max-width:34rem;
+}
+
+
+.entry__content {
+    p {
+        @extend .entry__row;
+    }
+
+    @include headings() {
+        @extend .entry__row;
+    }
+
+    img {
+        width:100%;
+        height:auto;
+        margin: 0 0 1rem;
+    }
+
+
+    .aligncenter {
+        @extend .entry__row;
+        margin-bottom: 1rem;
+        @include center-el();
+    }
+
+    .alignleft {
+        @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+
+        @media #{$medium-up} {
+            @include grid-column(
+                $columns:9,
+                $collapse:true
+            );
+        }
+    }
+
+    .alignright {
+        @extend .alignleft; 
+        @media #{$medium-up}{
+            float:right;
+        }
+    }
+}
+
+.figure.alignleft {
+    margin: 0 0 1rem;
+    overflow: hidden;
+    width:100%;
+    @include center-el();
+    @extend .row;
+
+    img {
+         @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+
+    @media #{$medium-up} {
+        img {
+             @include grid-column(
+                $columns:9,
+                $collapse:true
+            );
+        }
+
+        figcaption {
+            @include grid-column(
+                $columns:3
+                );
+            text-align:left;
+            &:after {
+                padding-top: 1rem;
+            }
+            &:before {
+                content: "";
+                border-top: 1px dotted $grey;
+                width: 100%;
+                display: block;
+                padding-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.figure.alignright {
+    margin: 0 0 1rem;
+    overflow: hidden;
+    width:100%;
+    @include center-el();
+    @extend .row;
+
+    img {
+         @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+
+    @media #{$medium-up} {
+        img {
+             @include grid-column(
+                $columns:9,
+                $collapse:true,
+                $float:right
+            );
+        }
+
+        figcaption {
+            @include grid-column(
+                $columns:3
+                );
+            text-align:left;
+            
+            &:after {
+                padding-top: 1rem;
+            }
+            
+            &:before {
+                content: "";
+                border-top: 1px dotted $grey;
+                width: 100%;
+                display: block;
+                padding-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.figure.aligncenter {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    @extend .entry__row;
+    @include center-el();
+
+    img {
+        @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+}
+
+.img-block {
+    @extend .row;
+    @include center-el();
+    overflow: hidden;
+    margin-bottom:1rem;
+
+    img {
+        @include grid-column(
+               $columns:6     
+            );
+    }
+}
