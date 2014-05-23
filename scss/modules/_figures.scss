@@ -1,0 +1,162 @@
+
+.figure.alignleft {
+    margin: 0 0 1rem;
+    overflow: hidden;
+    width:100%;
+    @include center-el();
+    // @extend .row;
+
+    img {
+         @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+
+    @media #{$medium-up} {
+        img {
+             @include grid-column(
+                $columns:9,
+                $collapse:true
+            );
+        }
+
+        figcaption {
+            @include grid-column(
+                $columns:3
+                );
+            text-align:left;
+            &:after {
+                padding-top: 1rem;
+            }
+            &:before {
+                content: "";
+                border-top: 1px dotted $grey;
+                width: 100%;
+                display: block;
+                padding-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.figure.alignright {
+    margin: 0 0 1rem;
+    overflow: hidden;
+    width:100%;
+    @include center-el();
+    // @extend .row;
+
+    img {
+         @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+
+    @media #{$medium-up} {
+        img {
+             @include grid-column(
+                $columns:9,
+                $collapse:true,
+                $float:right
+            );
+        }
+
+        figcaption {
+            @include grid-column(
+                $columns:3
+                );
+            text-align:left;
+            
+            &:after {
+                padding-top: 1rem;
+            }
+            
+            &:before {
+                content: "";
+                border-top: 1px dotted $grey;
+                width: 100%;
+                display: block;
+                padding-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.figure.aligncenter {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    @extend .entry__row;
+    @include center-el();
+
+    img {
+        @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+    }
+
+    figcaption {
+        @include grid-column(
+            $columns:12
+            );
+        text-align:center;
+        font-size:rem-calc(14);
+
+        &:after {
+            content: "";
+            border-bottom: 1px dotted $grey;
+            width: 100%;
+            display: block;
+            padding-top: 0.75rem;
+        }
+    }
+}
+
+.img-block {
+    @extend .row;
+    @include center-el();
+    overflow: hidden;
+    margin-bottom:1rem;
+
+    @media #{$medium-up} {
+        img {
+            @include grid-column(
+                   $columns:6     
+                );
+        }
+    }
+}

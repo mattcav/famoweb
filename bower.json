@@ -4,5 +4,8 @@
   "private": "true",
   "dependencies": {
     "foundation": "zurb/bower-foundation"
+  },
+  "devDependencies": {
+    "picturefill": "~2.0.0"
   }
 }

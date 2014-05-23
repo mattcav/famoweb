@@ -32,13 +32,15 @@ require_once('lib/foundation.php'); // load Foundation specific functions like t
 */
 require_once('lib/nav.php'); // filter default wordpress menu classes and clean wp_nav_menu markup
 /*
-5. lib/presstrends.php
-    - add PressTrends, tracks how many people are using famo
+5. lib/metabox.php
+    - add custom metaboxes 
 */
+//require_once('lib/metabox.php');
 
 /**********************
 Add theme supports
  **********************/
+
 if( ! function_exists( 'famo_theme_support' ) ) {
     function famo_theme_support() {
         // Add language supports.
@@ -115,4 +117,10 @@ function filter_ptags_on_images($content){
 }
 
 add_filter('the_content', 'filter_ptags_on_images');
+
+
+
+
+
+
 ?>

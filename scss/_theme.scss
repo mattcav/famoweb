@@ -1,11 +1,23 @@
 
 
-.format-chat {
+.entry.format-chat {
     h2 {
         font: {
             style:italic;
             size:1rem;
             weight:400;
+        }
+    }
+}
+
+.title {
+    text-transform:uppercase;
+    line-height:1;
+    span {
+        font-weight:300;
+        &:before {
+            content: "\A";
+            white-space: pre;
         }
     }
 }

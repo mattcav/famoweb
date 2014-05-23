@@ -32,6 +32,8 @@ module.exports = function(grunt) {
         src: [
             'bower_components/jquery/dist/jquery.js', 
             'bower_components/foundation/js/foundation.js',
+            'bower_components/picturefill/src/picturefill.js',
+            'js/vendor/hyphrenator.js',
             'js/app.js'
         ],
         dest: 'js/build/app.js',
