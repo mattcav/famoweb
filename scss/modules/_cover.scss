@@ -1,0 +1,26 @@
+.cover {
+      margin:0;
+      @media #{$large-up} {
+        height:80vh;
+        position:relative;
+        overflow: hidden;
+        display:flex;
+        justify-content:center;
+      }
+}
+
+.cover--top {
+    @media #{$large-up} {
+        align-items:flex-start;
+    }
+}
+.cover--bottom {
+    @media #{$large-up} {
+        align-items:flex-end;
+    }
+}
+.cover--center {
+    @media #{$large-up} {
+        align-items:center;
+    }
+}

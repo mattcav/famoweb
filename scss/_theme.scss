@@ -1,13 +1,17 @@
 
 
-.entry.format-chat {
-    h2 {
-        font: {
-            style:italic;
-            size:1rem;
-            weight:400;
-        }
-    }
+.justify {
+     text-align:justify;
+        
+     -ms-word-break: break-all;
+         word-break: break-all;
+
+         // Non standard for webkit
+         word-break: break-word;
+
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+            hyphens: auto;
 }
 
 .title {

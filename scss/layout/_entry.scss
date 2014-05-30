@@ -1,0 +1,119 @@
+.entry {
+    @include grid-column(
+        $columns:12,
+        $collapse:true
+        );
+
+    .cover {
+        margin-bottom:2rem;
+        @media #{$medium-up} {
+            margin-bottom:3rem;
+        }
+    }    
+}
+
+
+.entry__cover-img {
+    @include center-el();    
+}
+
+
+.entry__header {
+    margin: 0 0 1rem;
+}
+
+
+
+.entry__excerpt {
+    text-transform:uppercase;
+    margin-top:2rem;
+    font-size:rem-calc(23);
+    line-height:1.2;
+}
+
+.entry__row {
+    @include grid-column(
+            $columns:12,
+            $center:true
+        );
+    max-width:44rem;
+
+    @media #{$medium-up} {
+        padding-left:2rem;
+        padding-right:2rem;
+    }
+}
+
+
+.entry__content {
+    p {
+        @extend .entry__row;
+        @extend .justify;
+        @media #{$medium-up} {
+            padding-left:2rem;
+            padding-right:2rem;
+        }
+    }
+
+    @include headings() {
+        @extend .entry__row;
+        @media #{$medium-up} {
+            padding-left:2rem;
+            padding-right:2rem;
+        }
+    }
+
+    img {
+        width:100%;
+        height:auto;
+        margin: 0 0 1rem;
+    }
+    
+    .alignnone {
+        margin: 1rem 0;
+    }
+
+    .aligncenter {
+        @extend .entry__row;
+        margin-bottom: 1rem;
+        @include center-el();
+    }
+
+    .alignleft {
+        @include grid-column(
+            $columns:12,
+            $collapse:true
+        );
+
+        @media #{$medium-up} {
+            @include grid-column(
+                $columns:6,
+                $collapse:true
+            );
+            margin-right:1rem;
+        }
+    }
+
+    .alignright {
+        @extend .alignleft; 
+        @media #{$medium-up} {
+            @include grid-column(
+                $columns:6,
+                $collapse:true,
+                $float:right
+            );
+            margin-left:1rem;
+        }
+    }
+}
+
+
+.entry.format-chat {
+    h2 {
+        font: {
+            style:italic;
+            size:1rem;
+            weight:400;
+        }
+    }
+}

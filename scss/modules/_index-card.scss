@@ -1,0 +1,22 @@
+.index-card {
+    margin:1rem 0;
+    position:relative;
+    @include grid-column(
+        $columns:12,
+        $collapse:true
+    );
+    @media #{$medium-up} {
+        margin:0;
+    }
+}
+
+.index-card__header {
+    @media #{$medium-up} {
+        @include position(absolute, top 1rem left 1rem);
+        z-index:100;
+    }
+    @media #{$large-up} {
+        top:3rem;
+        left:3rem;
+    }
+}
