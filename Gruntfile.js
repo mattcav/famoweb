@@ -34,6 +34,7 @@ module.exports = function(grunt) {
             'bower_components/foundation/js/foundation.js',
             'bower_components/picturefill/src/picturefill.js',
             'js/vendor/hyphrenator.js',
+            'js/page-transition.js',
             'js/app.js'
         ],
         dest: 'js/build/app.js',

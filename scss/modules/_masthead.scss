@@ -1,0 +1,13 @@
+.masthead {
+    overflow: hidden;
+    @media #{$medium-up} {
+        margin-bottom:1.125rem;
+    }
+}
+
+.masthead__img {
+    @include center-el();
+    max-width:5rem;
+    width:50%;
+    max-width:15rem;
+}

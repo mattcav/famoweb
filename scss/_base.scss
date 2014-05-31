@@ -9,6 +9,26 @@ figure {
     margin:0 0 1rem;
 }
 
+video {
+    width:100%;
+    height:auto;
+}
+
+.video__container {
+    position: relative;
+  }
+  
+  #video-cover, #video-canvas {
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+  #video-cover {
+    height: 100%;
+    position: absolute;
+  }
 
 // helpers
 

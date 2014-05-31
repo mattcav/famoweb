@@ -1,0 +1,57 @@
+.issue__container {
+    background-color:pink;
+    overflow: hidden;
+    background: {
+        color:$white;
+        image:url('../img/texture.jpg');
+    }
+}
+
+.issue {
+     @include grid-column(
+                $columns:12,
+                $float:right
+            );
+    padding:2rem 1rem 15rem;
+    max-width:48rem;
+
+    @media #{$large-up}{
+        @include grid-column(
+                $columns:8,
+                $float:right
+            );
+        padding:0;
+        position:relative;
+        z-index:10;
+        margin-top:-5px;
+    }
+
+    @media #{$xlarge-up}{
+        max-width:100%;
+        @include grid-column(
+                $columns:6,
+                $float:right,
+                $collapse:true
+            );
+    }
+}
+
+.issue__inner {
+    padding:0 0 1rem;
+    @media #{$large-up}{
+        padding:3rem 1rem 4rem;
+    }
+}
+
+.issue__video {
+    position:relative;
+    z-index:20;
+}
+
+.issue__header {
+    margin-top:1.75rem;
+}
+
+.issue__title {
+    margin-bottom:1.125rem;
+}

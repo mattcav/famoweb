@@ -1,0 +1,42 @@
+.index-module {
+    margin:1rem 0;
+    position:relative;
+    @include grid-column(
+        $columns:12,
+        $collapse:true
+    );
+    @media #{$medium-up} {
+        margin:1rem 0 1rem;
+
+        @include grid-column(
+            $columns:6,
+            $collapse:false
+        );
+    }
+
+    &:nth-child(2n+1) {
+        clear:both;
+    }
+}
+
+
+.index-module__header {
+    display:flex;
+    align-items:baseline;
+}
+
+.index-module__id {
+    display:inline-block;
+    color:$black;
+    font: {
+        //style:italic;
+        weight:700;
+        size:rem-calc(18);
+    }
+}
+
+.index-module__title {
+  display:inline-block;
+  padding:0 1rem;
+  font-size:rem-calc(23);
+}
