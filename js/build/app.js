@@ -9206,7 +9206,7 @@ return jQuery;
 
     while (i--) {
       if(head.has('.' + class_array[i]).length === 0) {
-          head.append('<meta class="' + class_array[i] + '" />');
+        head.append('<meta class="' + class_array[i] + '" />');
       }
     }
   };
@@ -9289,9 +9289,6 @@ return jQuery;
     var self = this,
         should_bind_events = !S(this).data(this.attr_name(true));
 
-    if (typeof method === 'string') {
-      return this[method].call(this, options);
-    }
 
     if (S(this.scope).is('[' + this.attr_name() +']')) {
       S(this.scope).data(this.attr_name(true) + '-init', $.extend({}, this.settings, (options || method), this.data_options(S(this.scope))));
@@ -9310,6 +9307,11 @@ return jQuery;
         }
       });
     }
+    // # Patch to fix #5043 to move this *after* the if/else clause in order for Backbone and similar frameworks to have improved control over event binding and data-options updating. 
+    if (typeof method === 'string') {
+      return this[method].call(this, options);
+    }
+
   };
 
   var single_image_loaded = function (image, callback) {
@@ -9340,7 +9342,7 @@ return jQuery;
       bindLoad.call(image);
     }
   };
-  
+
   /*
     https://github.com/paulirish/matchMedia.js
   */
@@ -9404,14 +9406,14 @@ return jQuery;
   for (; lastTime < vendors.length && !requestAnimationFrame; lastTime++) {
     requestAnimationFrame = window[ vendors[lastTime] + "RequestAnimationFrame" ];
     cancelAnimationFrame = cancelAnimationFrame ||
-      window[ vendors[lastTime] + "CancelAnimationFrame" ] || 
+      window[ vendors[lastTime] + "CancelAnimationFrame" ] ||
       window[ vendors[lastTime] + "CancelRequestAnimationFrame" ];
   }
 
   function raf() {
     if (animating) {
       requestAnimationFrame(raf);
-      
+
       if (jqueryFxAvailable) {
         jQuery.fx.tick();
       }
@@ -9422,7 +9424,7 @@ return jQuery;
     // use rAF
     window.requestAnimationFrame = requestAnimationFrame;
     window.cancelAnimationFrame = cancelAnimationFrame;
-    
+
     if (jqueryFxAvailable) {
       jQuery.fx.timer = function (timer) {
         if (timer() && jQuery.timers.push(timer) && !animating) {
@@ -9467,7 +9469,7 @@ return jQuery;
   window.Foundation = {
     name : 'Foundation',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     media_queries : {
       small : S('.foundation-mq-small').css('font-family').replace(/^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g, ''),
@@ -9557,18 +9559,18 @@ return jQuery;
       //    Don't bother reading the namespace out of the meta tag
       //    if the namespace has been set globally in javascript
       //
-      // Example: 
+      // Example:
       //    Foundation.global.namespace = 'my-namespace';
       // or make it an empty string:
       //    Foundation.global.namespace = '';
       //
       //
 
-      // If the namespace has not been set (is undefined), try to read it out of the meta element. 
+      // If the namespace has not been set (is undefined), try to read it out of the meta element.
       // Otherwise use the globally defined namespace, even if it's empty ('')
       var namespace = ( this.global.namespace === undefined ) ? $('.foundation-data-attribute-namespace').css('font-family') : this.global.namespace;
-      
-      // Finally, if the namsepace is either undefined or false, set it to an empty string. 
+
+      // Finally, if the namsepace is either undefined or false, set it to an empty string.
       // Otherwise use the namespace value.
       this.global.namespace = ( namespace === undefined || /false/i.test(namespace) ) ? '' : namespace;
     },
@@ -9579,23 +9581,23 @@ return jQuery;
     utils : {
 
       // Description:
-      //    Fast Selector wrapper returns jQuery object. Only use where getElementById 
+      //    Fast Selector wrapper returns jQuery object. Only use where getElementById
       //    is not available.
       //
       // Arguments:
-      //    Selector (String): CSS selector describing the element(s) to be 
+      //    Selector (String): CSS selector describing the element(s) to be
       //    returned as a jQuery object.
       //
-      //    Scope (String): CSS selector describing the area to be searched. Default 
+      //    Scope (String): CSS selector describing the area to be searched. Default
       //    is document.
       //
       // Returns:
-      //    Element (jQuery Object): jQuery object containing elements matching the 
+      //    Element (jQuery Object): jQuery object containing elements matching the
       //    selector within the scope.
       S : S,
 
       // Description:
-      //    Executes a function a max of once every n milliseconds 
+      //    Executes a function a max of once every n milliseconds
       //
       // Arguments:
       //    Func (Function): Function to be throttled.
@@ -9627,8 +9629,8 @@ return jQuery;
       //    Func (Function): Function to be debounced.
       //
       //    Delay (Integer): Function execution threshold in milliseconds.
-      // 
-      //    Immediate (Bool): Whether the function should be called at the beginning 
+      //
+      //    Immediate (Bool): Whether the function should be called at the beginning
       //    of the delay instead of the end. Default is false.
       //
       // Returns:
@@ -9656,18 +9658,19 @@ return jQuery;
       //    El (jQuery Object): Element to be parsed.
       //
       // Returns:
-      //    Options (Javascript Object): Contents of the element's data-options 
+      //    Options (Javascript Object): Contents of the element's data-options
       //    attribute.
-      data_options : function (el) {
+      data_options : function (el, data_attr_name) {
+        data_attr_name = data_attr_name || 'options';
         var opts = {}, ii, p, opts_arr,
             data_options = function (el) {
               var namespace = Foundation.global.namespace;
 
               if (namespace.length > 0) {
-                return el.data(namespace + '-options');
+                return el.data(namespace + '-' + data_attr_name);
               }
 
-              return el.data('options');
+              return el.data(data_attr_name);
             };
 
         var cached_options = data_options(el);
@@ -9690,6 +9693,7 @@ return jQuery;
 
         while (ii--) {
           p = opts_arr[ii].split(':');
+          p = [p[0], p.slice(1).join(':')];
 
           if (/true/i.test(p[1])) p[1] = true;
           if (/false/i.test(p[1])) p[1] = false;
@@ -9713,13 +9717,13 @@ return jQuery;
       //    Adds JS-recognizable media queries
       //
       // Arguments:
-      //    Media (String): Key string for the media query to be stored as in 
+      //    Media (String): Key string for the media query to be stored as in
       //    Foundation.media_queries
       //
       //    Class (String): Class name for the generated <meta> tag
       register_media : function (media, media_class) {
         if(Foundation.media_queries[media] === undefined) {
-          $('head').append('<meta class="' + media_class + '">');
+          $('head').append('<meta class="' + media_class + '"/>');
           Foundation.media_queries[media] = removeQuotes($('.' + media_class).css('font-family'));
         }
       },
@@ -9730,16 +9734,16 @@ return jQuery;
       // Arguments:
       //    Rule (String): CSS rule to be appended to the document.
       //
-      //    Media (String): Optional media query string for the CSS rule to be 
+      //    Media (String): Optional media query string for the CSS rule to be
       //    nested under.
       add_custom_rule : function (rule, media) {
-        if (media === undefined) {
+        if (media === undefined && Foundation.stylesheet) {
           Foundation.stylesheet.insertRule(rule, Foundation.stylesheet.cssRules.length);
         } else {
           var query = Foundation.media_queries[media];
 
           if (query !== undefined) {
-            Foundation.stylesheet.insertRule('@media ' + 
+            Foundation.stylesheet.insertRule('@media ' +
               Foundation.media_queries[media] + '{ ' + rule + ' }');
           }
         }
@@ -9751,7 +9755,7 @@ return jQuery;
       // Arguments:
       //    Image (jQuery Object): Image(s) to check if loaded.
       //
-      //    Callback (Function): Fundation to execute when image is fully loaded.
+      //    Callback (Function): Function to execute when image is fully loaded.
       image_loaded : function (images, callback) {
         var self = this,
             unloaded = images.length;
@@ -9774,7 +9778,7 @@ return jQuery;
       //    Returns a random, alphanumeric string
       //
       // Arguments:
-      //    Length (Integer): Length of string to be generated. Defaults to random 
+      //    Length (Integer): Length of string to be generated. Defaults to random
       //    integer.
       //
       // Returns:
@@ -9797,7 +9801,7 @@ return jQuery;
     });
   };
 
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -9805,7 +9809,7 @@ return jQuery;
   Foundation.libs.abide = {
     name : 'abide',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       live_validate : true,
@@ -9816,7 +9820,7 @@ return jQuery;
         alpha: /^[a-zA-Z]+$/,
         alpha_numeric : /^[a-zA-Z0-9]+$/,
         integer: /^[-+]?\d+$/,
-        number: /^[-+]?\d*(?:\.\d+)?$/,
+        number: /^[-+]?\d*(?:[\.\,]\d+)?$/,
 
         // amex, visa, diners
         card : /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
@@ -9836,7 +9840,7 @@ return jQuery;
         time : /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
         dateISO: /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
         // MM/DD/YYYY
-        month_day_year : /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/,
+        month_day_year : /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
 
         // #FFF or #FFFFFF
         color: /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
@@ -9902,19 +9906,19 @@ return jQuery;
           settings = form.data(this.attr_name(true) + '-init') || {},
           submit_event = /submit/.test(e.type);
 
-      form.trigger('validated');
+      form.trigger('validated').trigger('validated.fndtn.abide');
       // Has to count up to make sure the focus gets applied to the top error
       for (var i=0; i < validation_count; i++) {
         if (!validations[i] && (submit_event || is_ajax)) {
           if (settings.focus_on_invalid) els[i].focus();
-          form.trigger('invalid');
+          form.trigger('invalid').trigger('invalid.fndtn.abide');
           this.S(els[i]).closest('[data-' + this.attr_name(true) + ']').attr(this.invalid_attr, '');
           return false;
         }
       }
 
       if (submit_event || is_ajax) {
-        form.trigger('valid');
+        form.trigger('valid').trigger('valid.fndtn.abide');
       }
 
       form.removeAttr(this.invalid_attr);
@@ -9965,7 +9969,7 @@ return jQuery;
       while (i--) {
         var el = el_patterns[i][0],
             required = el_patterns[i][2],
-            value = el.value,
+            value = el.value.trim(),
             direct_parent = this.S(el).parent(),
             validator = el.getAttribute(this.add_namespace('data-abide-validator')),
             is_radio = el.type === "radio",
@@ -10039,7 +10043,7 @@ return jQuery;
 
     valid_radio : function (el, required) {
       var name = el.getAttribute('name'),
-          group = this.S(el).closest('[data-' + this.attr_name(true) + ']').find("[name="+name+"]"),
+          group = this.S(el).closest('[data-' + this.attr_name(true) + ']').find("[name='"+name+"']"),
           count = group.length,
           valid = false;
 
@@ -10097,7 +10101,7 @@ return jQuery;
       return valid;
     }
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -10105,12 +10109,13 @@ return jQuery;
   Foundation.libs.accordion = {
     name : 'accordion',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       active_class: 'active',
       multi_expand: false,
-      toggleable: true
+      toggleable: true,
+      callback : function () {}
     },
 
     init : function (scope, method, options) {
@@ -10122,21 +10127,28 @@ return jQuery;
       var S = this.S;
       S(this.scope)
       .off('.fndtn.accordion')
-      .on('click.fndtn.accordion', '[' + this.attr_name() + '] dd > a', function (e) {
+      .on('click.fndtn.accordion', '[' + this.attr_name() + '] > dd > a', function (e) {
         var accordion = S(this).closest('[' + self.attr_name() + ']'),
             target = S('#' + this.href.split('#')[1]),
             siblings = S('dd > .content', accordion),
             aunts = $('dd', accordion),
+            groupSelector = self.attr_name() + '=' + accordion.attr(self.attr_name()),
             settings = accordion.data(self.attr_name(true) + '-init'),
-            active_content = S('dd > .content.' + settings.active_class, accordion),
-            active_parent = S('dd.' + settings.active_class, accordion);
+            active_content = S('dd > .content.' + settings.active_class, accordion);
         e.preventDefault();
 
-        if (! S(this).closest('dl').is(accordion)) { return; }
+        if (accordion.attr(self.attr_name())) {
+          siblings = siblings.add('[' + groupSelector + '] dd > .content');
+          aunts = aunts.add('[' + groupSelector + '] dd');
+        }
 
         if (settings.toggleable && target.is(active_content)) {
-          active_parent.toggleClass(settings.active_class, false);
-          return target.toggleClass(settings.active_class, false);
+          target.parent('dd').toggleClass(settings.active_class, false);
+          target.toggleClass(settings.active_class, false);
+          settings.callback(target);
+          target.triggerHandler('toggled', [accordion]);
+          accordion.triggerHandler('toggled', [target]);
+          return;
         }
 
         if (!settings.multi_expand) {
@@ -10145,6 +10157,9 @@ return jQuery;
         }
 
         target.addClass(settings.active_class).parent().addClass(settings.active_class);
+        settings.callback(target);
+        target.triggerHandler('toggled', [accordion]);
+        accordion.triggerHandler('toggled', [target]);
       });
     },
 
@@ -10152,7 +10167,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -10160,7 +10175,7 @@ return jQuery;
   Foundation.libs.alert = {
     name : 'alert',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       callback: function (){}
@@ -10179,15 +10194,15 @@ return jQuery;
               settings = alertBox.data(self.attr_name(true) + '-init') || self.settings;
 
         e.preventDefault();
-        if ('transitionend' in window || 'webkitTransitionEnd' in window || 'oTransitionEnd' in window) {
+        if (Modernizr.csstransitions) {
           alertBox.addClass("alert-close");
           alertBox.on('transitionend webkitTransitionEnd oTransitionEnd', function(e) {
-            S(this).trigger('close').remove();
+            S(this).trigger('close').trigger('close.fndtn.alert').remove();
             settings.callback();
           });
         } else {
           alertBox.fadeOut(300, function () {
-            S(this).trigger('close').remove();
+            S(this).trigger('close').trigger('close.fndtn.alert').remove();
             settings.callback();
           });
         }
@@ -10196,7 +10211,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -10204,7 +10219,7 @@ return jQuery;
   Foundation.libs.clearing = {
     name : 'clearing',
 
-    version: '5.2.2',
+    version: '5.3.0',
 
     settings : {
       templates : {
@@ -10216,7 +10231,10 @@ return jQuery;
 
       // comma delimited list of selectors that, on click, will close clearing,
       // add 'div.clearing-blackout, div.visible-img' to close on background click
-      close_selectors : '.clearing-close',
+      close_selectors : '.clearing-close, div.clearing-blackout', 
+
+      // Default to the entire li element.
+      open_selectors : '',
 
       touch_label : '',
 
@@ -10242,15 +10260,16 @@ return jQuery;
 
     events : function (scope) {
       var self = this,
-      S = self.S;
+          S = self.S,
+          $scroll_container = $('.scroll-container');
 
-      if ($('.scroll-container').length > 0) {
-        this.scope = $('.scroll-container');
+      if ($scroll_container.length > 0) {
+        this.scope = $scroll_container;
       }
 
       S(this.scope)
         .off('.clearing')
-        .on('click.fndtn.clearing', 'ul[' + this.attr_name() + '] li',
+        .on('click.fndtn.clearing', 'ul[' + this.attr_name() + '] li ' + this.settings.open_selectors,
           function (e, current, target) {
             var current = current || S(this),
                 target = target || current,
@@ -10326,7 +10345,11 @@ return jQuery;
 
           data.delta_x = e.touches[0].pageX - data.start_page_x;
 
-          if ( typeof data.is_scrolling === 'undefined') {
+          if (Foundation.rtl) {
+            data.delta_x = -data.delta_x;
+          }
+
+          if (typeof data.is_scrolling === 'undefined') {
             data.is_scrolling = !!( data.is_scrolling || Math.abs(data.delta_x) < Math.abs(e.touches[0].pageY - data.start_page_y) );
           }
 
@@ -10351,8 +10374,10 @@ return jQuery;
       }
       
       $el.after('<div id="foundationClearingHolder"></div>');
-      var grid = $el.detach();
-      var grid_outerHTML = '';
+
+      var grid = $el.detach(),
+          grid_outerHTML = '';
+
       if (grid[0] == null) {
         return;
       } else {
@@ -10361,7 +10386,6 @@ return jQuery;
       
       var holder = this.S('#foundationClearingHolder'),
           settings = $el.data(this.attr_name(true) + '-init'),
-          grid = $el.detach(),
           data = {
             grid: '<div class="carousel">' + grid_outerHTML + '</div>',
             viewing: settings.templates.viewing
@@ -10400,12 +10424,12 @@ return jQuery;
               cb.call(this, image);
             }
           }.bind(this));
-        }.bind(this), 50);
+        }.bind(this), 100);
       }
 
       function cb (image) {
         var $image = $(image);
-        image.css('visibility', 'visible');
+        $image.css('visibility', 'visible');
         // toggle the gallery
         body.css('overflow', 'hidden');
         root.addClass('clearing-blackout');
@@ -10415,19 +10439,20 @@ return jQuery;
           .caption(self.S('.clearing-caption', visible_image), self.S('img', target))
           .center_and_label(image, label)
           .shift(current, target, function () {
-            target.siblings().removeClass('visible');
-            target.addClass('visible');
+            target.closest('li').siblings().removeClass('visible');
+            target.closest('li').addClass('visible');
           });
+        visible_image.trigger('opened.fndtn.clearing')
       }
 
       if (!this.locked()) {
+        visible_image.trigger('open.fndtn.clearing');
         // set the image to the selected thumbnail
         image
           .attr('src', this.load($image))
           .css('visibility', 'hidden');
 
         startLoad.call(this);
-
       }
     },
 
@@ -10447,12 +10472,14 @@ return jQuery;
         body.css('overflow', '');
         container = $('div', root).first();
         visible_image = $('.visible-img', container);
+        visible_image.trigger('close.fndtn.clearing');
         this.settings.prev_index = 0;
         $('ul[' + this.attr_name() + ']', root)
           .attr('style', '').closest('.clearing-blackout')
           .removeClass('clearing-blackout');
         container.removeClass('clearing-container');
         visible_image.hide();
+        visible_image.trigger('closed.fndtn.clearing');        
       }
 
       return false;
@@ -10470,7 +10497,7 @@ return jQuery;
 
       if (e.which === NEXT_KEY) this.go(clearing, 'next');
       if (e.which === PREV_KEY) this.go(clearing, 'prev');
-      if (e.which === ESC_KEY) this.S('a.clearing-close').trigger('click');
+      if (e.which === ESC_KEY) this.S('a.clearing-close').trigger('click').trigger('click.fndtn.clearing');
     },
 
     nav : function (e, direction) {
@@ -10486,6 +10513,7 @@ return jQuery;
 
       if (image.length) {
         this.center_and_label(image, label);
+        image.trigger('resized.fndtn.clearing')
       }
     },
 
@@ -10495,38 +10523,35 @@ return jQuery;
           self = this;
 
       lis.each(function () {
-          var li = self.S(this),
-              image = li.find('img');
+        var li = self.S(this),
+            image = li.find('img');
 
-          if (li.height() > image.outerHeight()) {
-            li.addClass('fix-height');
-          }
-        })
-        .closest('ul')
-        .width(lis.length * 100 + '%');
+        if (li.height() > image.outerHeight()) {
+          li.addClass('fix-height');
+        }
+      })
+      .closest('ul')
+      .width(lis.length * 100 + '%');
 
       return this;
     },
 
     update_paddles : function (target) {
+      target = target.closest('li');
       var visible_image = target
         .closest('.carousel')
         .siblings('.visible-img');
 
       if (target.next().length > 0) {
-        this.S('.clearing-main-next', visible_image)
-          .removeClass('disabled');
+        this.S('.clearing-main-next', visible_image).removeClass('disabled');
       } else {
-        this.S('.clearing-main-next', visible_image)
-          .addClass('disabled');
+        this.S('.clearing-main-next', visible_image).addClass('disabled');
       }
 
       if (target.prev().length > 0) {
-        this.S('.clearing-main-prev', visible_image)
-          .removeClass('disabled');
+        this.S('.clearing-main-prev', visible_image).removeClass('disabled');
       } else {
-        this.S('.clearing-main-prev', visible_image)
-          .addClass('disabled');
+        this.S('.clearing-main-prev', visible_image).addClass('disabled');
       }
     },
 
@@ -10566,10 +10591,12 @@ return jQuery;
     // image loading and preloading
 
     load : function ($image) {
+      var href;
+
       if ($image[0].nodeName === "A") {
-        var href = $image.attr('href');
+        href = $image.attr('href');
       } else {
-        var href = $image.parent().attr('href');
+        href = $image.parent().attr('href');
       }
 
       this.preload($image);
@@ -10613,7 +10640,7 @@ return jQuery;
           .hide();
       }
       return this;
-    },
+    }, 
 
     // directional methods
 
@@ -10623,7 +10650,8 @@ return jQuery;
 
       if (target.length) {
         this.S('img', target)
-          .trigger('click', [current, target]);
+          .trigger('click', [current, target]).trigger('click.fndtn.clearing', [current, target])
+          .trigger('change.fndtn.clearing');
       }
     },
 
@@ -10679,11 +10707,9 @@ return jQuery;
       this.settings.up_count = up_count;
 
       if (this.adjacent(this.settings.prev_index, target_index)) {
-        if ((target_index > up_count)
-          && target_index > this.settings.prev_index) {
+        if ((target_index > up_count) && target_index > this.settings.prev_index) {
           response = 'right';
-        } else if ((target_index > up_count - 1)
-          && target_index <= this.settings.prev_index) {
+        } else if ((target_index > up_count - 1) && target_index <= this.settings.prev_index) {
           response = 'left';
         } else {
           response = false;
@@ -10728,7 +10754,7 @@ return jQuery;
     }
   };
 
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -10736,7 +10762,7 @@ return jQuery;
   Foundation.libs.dropdown = {
     name : 'dropdown',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       active_class: 'open',
@@ -10766,15 +10792,18 @@ return jQuery;
           }
         })
         .on('mouseenter.fndtn.dropdown', '[' + this.attr_name() + '], [' + this.attr_name() + '-content]', function (e) {
-          var $this = S(this);
+          var $this = S(this),
+              dropdown,
+              target;
+
           clearTimeout(self.timeout);
 
           if ($this.data(self.data_attr())) {
-            var dropdown = S('#' + $this.data(self.data_attr())),
-                target = $this;
+            dropdown = S('#' + $this.data(self.data_attr()));
+            target = $this;
           } else {
-            var dropdown = $this;
-                target = S("[" + self.attr_name() + "='" + dropdown.attr('id') + "']");
+            dropdown = $this;
+            target = S("[" + self.attr_name() + "='" + dropdown.attr('id') + "']");
           }
 
           var settings = target.data(self.attr_name(true) + '-init') || self.settings;
@@ -10837,9 +10866,10 @@ return jQuery;
             .css(Foundation.rtl ? 'right':'left', '-99999px')
             .removeClass(self.settings.active_class)
             .prev('[' + self.attr_name() + ']')
-            .removeClass(self.settings.active_class);
+            .removeClass(self.settings.active_class)
+            .removeData('target');
 
-          self.S(this).trigger('closed', [dropdown]);
+          self.S(this).trigger('closed').trigger('closed.fndtn.dropdown', [dropdown]);
         }
       });
     },
@@ -10856,7 +10886,7 @@ return jQuery;
           .css(dropdown
             .addClass(this.settings.active_class), target);
         dropdown.prev('[' + this.attr_name() + ']').addClass(this.settings.active_class);
-        dropdown.trigger('opened', [dropdown, target]);
+        dropdown.data('target', target.get(0)).trigger('opened').trigger('opened.fndtn.dropdown', [dropdown, target]);
     },
 
     data_attr: function () {
@@ -10878,8 +10908,9 @@ return jQuery;
 
       if (dropdown.hasClass(this.settings.active_class)) {
         this.close.call(this, dropdown);
+        if (dropdown.data('target') !== target.get(0))
+          this.open.call(this, dropdown, target);
       } else {
-        this.close.call(this, this.S('[' + this.attr_name() + '-content]'))
         this.open.call(this, dropdown, target);
       }
     },
@@ -10894,6 +10925,8 @@ return jQuery;
     },
 
     css : function (dropdown, target) {
+      var left_offset = Math.max((target.width() - dropdown.width()) / 2, 8);
+      
       this.clear_idx();
 
       if (this.small()) {
@@ -10906,7 +10939,7 @@ return jQuery;
           top: p.top
         });
 
-        dropdown.css(Foundation.rtl ? 'right':'left', '2.5%');
+        dropdown.css(Foundation.rtl ? 'right':'left', left_offset);
       } else {
         var settings = target.data(this.attr_name(true) + '-init') || this.settings;
 
@@ -10940,7 +10973,7 @@ return jQuery;
       top: function (t, s) {
         var self = Foundation.libs.dropdown,
             p = self.dirs._base.call(this, t),
-            pip_offset_base = (t.outerWidth() / 2) - 8;
+            pip_offset_base = 8;
 
         this.addClass('drop-top');
 
@@ -10958,7 +10991,7 @@ return jQuery;
       bottom: function (t, s) {
         var self = Foundation.libs.dropdown,
             p = self.dirs._base.call(this, t),
-            pip_offset_base = (t.outerWidth() / 2) - 8;
+            pip_offset_base = 8;
 
         if (t.outerWidth() < this.outerWidth() || self.small()) {
           self.adjust_pip(pip_offset_base, p);
@@ -11035,7 +11068,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -11043,12 +11076,13 @@ return jQuery;
   Foundation.libs.equalizer = {
     name : 'equalizer',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       use_tallest: true,
       before_height_change: $.noop,
-      after_height_change: $.noop
+      after_height_change: $.noop,
+      equalize_on_stack: false
     },
 
     init : function (scope, method, options) {
@@ -11066,12 +11100,12 @@ return jQuery;
     equalize: function(equalizer) {
       var isStacked = false,
           vals = equalizer.find('[' + this.attr_name() + '-watch]:visible'),
-          firstTopOffset = vals.first().offset().top,
           settings = equalizer.data(this.attr_name(true)+'-init');
 
       if (vals.length === 0) return;
+      var firstTopOffset = vals.first().offset().top;
       settings.before_height_change();
-      equalizer.trigger('before-height-change');
+      equalizer.trigger('before-height-change').trigger('before-height-change.fndth.equalizer');
       vals.height('inherit');
       vals.each(function(){
         var el = $(this);
@@ -11079,9 +11113,13 @@ return jQuery;
           isStacked = true;
         }
       });
-      if (isStacked) return;
 
-      var heights = vals.map(function(){ return $(this).outerHeight() }).get();
+      if (settings.equalize_on_stack === false) {
+        if (isStacked) return;
+      };
+
+      var heights = vals.map(function(){ return $(this).outerHeight(false) }).get();
+
       if (settings.use_tallest) {
         var max = Math.max.apply(null, heights);
         vals.css('height', max);
@@ -11090,7 +11128,7 @@ return jQuery;
         vals.css('height', min);
       }
       settings.after_height_change();
-      equalizer.trigger('after-height-change');
+      equalizer.trigger('after-height-change').trigger('after-height-change.fndtn.equalizer');
     },
 
     reflow : function () {
@@ -11104,14 +11142,16 @@ return jQuery;
       });
     }
   };
-}(jQuery, this, this.document));
+})(jQuery, window, window.document);
+
+
 ;(function ($, window, document, undefined) {
   'use strict';
 
   Foundation.libs.interchange = {
     name : 'interchange',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     cache : {},
 
@@ -11160,7 +11200,8 @@ return jQuery;
 
             return trigger(el[0].src);
           }
-          var last_path = el.data(this.data_attr + '-last-path');
+          var last_path = el.data(this.data_attr + '-last-path'),
+              self = this;
 
           if (last_path == path) return;
 
@@ -11172,7 +11213,7 @@ return jQuery;
 
           return $.get(path, function (response) {
             el.html(response);
-            el.data(this.data_attr + '-last-path', path);
+            el.data(self.data_attr + '-last-path', path);
             trigger();
           });
 
@@ -11338,11 +11379,7 @@ return jQuery;
         this.object($(this['cached_' + type][i]));
       }
 
-      return $(window).trigger('resize');
-    },
-
-    parse_params : function (path, directive, mq) {
-      return [this.trim(path), this.convert_directive(directive), this.trim(mq)];
+      return $(window).trigger('resize').trigger('resize.fndtn.interchange');
     },
 
     convert_directive : function (directive) {
@@ -11356,6 +11393,25 @@ return jQuery;
       return 'replace';
     },
 
+    parse_scenario : function (scenario) {
+      // This logic had to be made more complex since some users were using commas in the url path
+      // So we cannot simply just split on a comma
+      var directive_match = scenario[0].match(/(.+),\s*(\w+)\s*$/),
+      media_query         = scenario[1];
+
+      if (directive_match) {
+        var path  = directive_match[1],
+        directive = directive_match[2];
+      }
+      else {
+        var cached_split = scenario[0].split(/,\s*$/),
+        path             = cached_split[0],
+        directive        = '';               
+      }
+
+      return [this.trim(path), this.convert_directive(directive), this.trim(media_query)];
+    },
+
     object : function(el) {
       var raw_arr = this.parse_data_attr(el),
           scenarios = [], 
@@ -11366,10 +11422,7 @@ return jQuery;
           var split = raw_arr[i].split(/\((.*?)(\))$/);
 
           if (split.length > 1) {
-            var cached_split = split[0].split(','),
-                params = this.parse_params(cached_split[0],
-                  cached_split[1], split[1]);
-
+            var params = this.parse_scenario(split);
             scenarios.push(params);
           }
         }
@@ -11435,7 +11488,7 @@ return jQuery;
 
   };
 
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -11445,7 +11498,7 @@ return jQuery;
   Foundation.libs.joyride = {
     name : 'joyride',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     defaults : {
       expose                   : false,     // turn on or off the expose feature
@@ -11544,7 +11597,7 @@ return jQuery;
             if (self.is_phone()) {
               self.pos_phone();
             } else {
-              self.pos_default(false, true);
+              self.pos_default(false);
             }
           }
         }, 100));
@@ -11579,7 +11632,7 @@ return jQuery;
       if (!this.settings.cookie_monster || this.settings.cookie_monster && !$.cookie(this.settings.cookie_name)) {
         this.settings.$tip_content.each(function (index) {
           var $this = $(this);
-          this.settings = $.extend({}, self.defaults, self.data_options($this))
+          this.settings = $.extend({}, self.defaults, self.data_options($this));
 
           // Make sure that settings parsed from data_options are integers where necessary
           var i = int_settings_count;
@@ -11741,7 +11794,7 @@ return jQuery;
                 $timer.animate({
                   width: $timer.parent().width()
                 }, this.settings.timer, 'linear');
-              }.bind(this), this.settings.tip_animation_fadeSpeed);
+              }.bind(this), this.settings.tip_animation_fade_speed);
 
             } else {
               this.settings.$next_tip.fadeIn(this.settings.tip_animation_fade_speed);
@@ -11833,7 +11886,7 @@ return jQuery;
       tipOffset = Math.ceil(this.settings.$target.offset().top - window_half + this.settings.$next_tip.outerHeight());
 
       if (tipOffset != 0) {
-        $('html, body').animate({
+        $('html, body').stop().animate({
           scrollTop: tipOffset
         }, this.settings.scroll_speed, 'swing');
       }
@@ -11849,10 +11902,8 @@ return jQuery;
       this.show('init');
     },
 
-    pos_default : function (init, resizing) {
-      var half_fold = Math.ceil($(window).height() / 2),
-          tip_position = this.settings.$next_tip.offset(),
-          $nub = this.settings.$next_tip.find('.joyride-nub'),
+    pos_default : function (init) {
+      var $nub = this.settings.$next_tip.find('.joyride-nub'),
           nub_width = Math.ceil($nub.outerWidth() / 2),
           nub_height = Math.ceil($nub.outerHeight() / 2),
           toggle = init || false;
@@ -11863,20 +11914,19 @@ return jQuery;
         this.settings.$next_tip.show();
       }
 
-      if (typeof resizing === 'undefined') {
-        resizing = false;
-      }
-
       if (!/body/i.test(this.settings.$target.selector)) {
+      	  var topAdjustment = this.settings.tip_settings.tipAdjustmentY ? parseInt(this.settings.tip_settings.tipAdjustmentY) : 0,
+			        leftAdjustment = this.settings.tip_settings.tipAdjustmentX ? parseInt(this.settings.tip_settings.tipAdjustmentX) : 0;
+          
           if (this.bottom()) {
             if (this.rtl) {
               this.settings.$next_tip.css({
-                top: (this.settings.$target.offset().top + nub_height + this.settings.$target.outerHeight()),
-                left: this.settings.$target.offset().left + this.settings.$target.outerWidth() - this.settings.$next_tip.outerWidth()});
+                top: (this.settings.$target.offset().top + nub_height + this.settings.$target.outerHeight() + topAdjustment),
+                left: this.settings.$target.offset().left + this.settings.$target.outerWidth() - this.settings.$next_tip.outerWidth() + leftAdjustment});
             } else {
               this.settings.$next_tip.css({
-                top: (this.settings.$target.offset().top + nub_height + this.settings.$target.outerHeight()),
-                left: this.settings.$target.offset().left});
+                top: (this.settings.$target.offset().top + nub_height + this.settings.$target.outerHeight() + topAdjustment),
+                left: this.settings.$target.offset().left + leftAdjustment});
             }
 
             this.nub_position($nub, this.settings.tip_settings.nub_position, 'top');
@@ -11884,12 +11934,12 @@ return jQuery;
           } else if (this.top()) {
             if (this.rtl) {
               this.settings.$next_tip.css({
-                top: (this.settings.$target.offset().top - this.settings.$next_tip.outerHeight() - nub_height),
+                top: (this.settings.$target.offset().top - this.settings.$next_tip.outerHeight() - nub_height + topAdjustment),
                 left: this.settings.$target.offset().left + this.settings.$target.outerWidth() - this.settings.$next_tip.outerWidth()});
             } else {
               this.settings.$next_tip.css({
-                top: (this.settings.$target.offset().top - this.settings.$next_tip.outerHeight() - nub_height),
-                left: this.settings.$target.offset().left});
+                top: (this.settings.$target.offset().top - this.settings.$next_tip.outerHeight() - nub_height + topAdjustment),
+                left: this.settings.$target.offset().left + leftAdjustment});
             }
 
             this.nub_position($nub, this.settings.tip_settings.nub_position, 'bottom');
@@ -11897,16 +11947,16 @@ return jQuery;
           } else if (this.right()) {
 
             this.settings.$next_tip.css({
-              top: this.settings.$target.offset().top,
-              left: (this.settings.$target.outerWidth() + this.settings.$target.offset().left + nub_width)});
+              top: this.settings.$target.offset().top + topAdjustment,
+              left: (this.settings.$target.outerWidth() + this.settings.$target.offset().left + nub_width + leftAdjustment)});
 
             this.nub_position($nub, this.settings.tip_settings.nub_position, 'left');
 
           } else if (this.left()) {
 
             this.settings.$next_tip.css({
-              top: this.settings.$target.offset().top,
-              left: (this.settings.$target.offset().left - this.settings.$next_tip.outerWidth() - nub_width)});
+              top: this.settings.$target.offset().top + topAdjustment,
+              left: (this.settings.$target.offset().left - this.settings.$next_tip.outerWidth() - nub_width + leftAdjustment)});
 
             this.nub_position($nub, this.settings.tip_settings.nub_position, 'right');
 
@@ -12266,7 +12316,7 @@ return jQuery;
       $('.joyride-modal-bg').hide();
       this.settings.$current_tip.hide();
 
-      if (typeof abort === 'undefined') {
+      if (typeof abort === 'undefined' || abort === false) {
         this.settings.post_step_callback(this.settings.$li.index(), this.settings.$current_tip);
         this.settings.post_ride_callback(this.settings.$li.index(), this.settings.$current_tip);
       }
@@ -12285,7 +12335,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -12293,13 +12343,14 @@ return jQuery;
   Foundation.libs['magellan-expedition'] = {
     name : 'magellan-expedition',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       active_class: 'active',
       threshold: 0, // pixels from the top of the expedition for it to become fixes
       destination_threshold: 20, // pixels from the top of destination for it to be considered active
-      throttle_delay: 30 // calculation throttling to increase framerate
+      throttle_delay: 30, // calculation throttling to increase framerate
+      fixed_top: 0 // top distance in pixels assigend to the fixed element on scroll
     }, 
 
     init : function (scope, method, options) {
@@ -12318,31 +12369,35 @@ return jQuery;
       S(self.scope)
         .off('.magellan')
         .on('click.fndtn.magellan', '[' + self.add_namespace('data-magellan-arrival') + '] a[href^="#"]', function (e) {
-            e.preventDefault();
-            var expedition = $(this).closest('[' + self.attr_name() + ']'),
-                settings = expedition.data('magellan-expedition-init');
+          e.preventDefault();
+          var expedition = $(this).closest('[' + self.attr_name() + ']'),
+              settings = expedition.data('magellan-expedition-init'),
+              hash = this.hash.split('#').join(''),
+              target = $("a[name='"+hash+"']");
+          
+          if (target.length === 0) {
+            target = $('#'+hash);
+          }
 
-            var hash = this.hash.split('#').join(''),
-                target = $("a[name='"+hash+"']");
-            if (target.length === 0) target = $('#'+hash);
+          // Account for expedition height if fixed position
+          var scroll_top = target.offset().top - settings.destination_threshold;
+          scroll_top = scroll_top - expedition.outerHeight();
 
-            // Account for expedition height if fixed position
-            var scroll_top = target.offset().top;
-            scroll_top = scroll_top - expedition.outerHeight();
-
-            $('html, body').stop().animate({
-                'scrollTop': scroll_top
-            }, 700, 'swing', function () {
-                if(history.pushState) {
-                    history.pushState(null, null, '#'+hash);
-                }
-                else {
-                    location.hash = '#'+hash;
-                }
-            });
+          $('html, body').stop().animate({
+            'scrollTop': scroll_top
+          }, 700, 'swing', function () {
+            if(history.pushState) {
+              history.pushState(null, null, '#'+hash);
+            }
+            else {
+              location.hash = '#'+hash;
+            }
+          });
         })
-        .on('scroll.fndtn.magellan', self.throttle(this.check_for_arrivals.bind(this), settings.throttle_delay))
-        $(window).on('resize.fndtn.magellan', self.throttle(this.set_expedition_position.bind(this), settings.throttle_delay));
+        .on('scroll.fndtn.magellan', self.throttle(this.check_for_arrivals.bind(this), settings.throttle_delay));
+      
+      $(window)
+        .on('resize.fndtn.magellan', self.throttle(this.set_expedition_position.bind(this), settings.throttle_delay));
     },
 
     check_for_arrivals : function() {
@@ -12355,11 +12410,12 @@ return jQuery;
       var self = this;
       $('[' + this.attr_name() + '=fixed]', self.scope).each(function(idx, el) {
         var expedition = $(this),
+            settings = expedition.data('magellan-expedition-init'),
             styles = expedition.attr('styles'), // save styles
             top_offset;
 
         expedition.attr('style', '');
-        top_offset = expedition.offset().top;
+        top_offset = expedition.offset().top + settings.threshold;
 
         expedition.data(self.data_attr('magellan-top-offset'), top_offset);
         expedition.attr('style', styles);
@@ -12372,6 +12428,7 @@ return jQuery;
 
       $('[' + this.attr_name() + '=fixed]', self.scope).each(function() {
         var expedition = $(this),
+            settings = expedition.data('magellan-expedition-init'),
             top_offset = expedition.data('magellan-top-offset');
 
         if (window_top_offset >= top_offset) {
@@ -12384,10 +12441,10 @@ return jQuery;
             placeholder.attr(self.add_namespace('data-magellan-expedition-clone'),'');
             expedition.before(placeholder);
           }
-          expedition.css({position:'fixed', top: 0});
+          expedition.css({position:'fixed', top: settings.fixed_top});
         } else {
           expedition.prev('[' + self.add_namespace('data-magellan-expedition-clone') + ']').remove();
-          expedition.attr('style','');
+          expedition.attr('style','').removeClass('fixed');
         }
       });
     },
@@ -12398,7 +12455,7 @@ return jQuery;
 
       $('[' + this.attr_name() + ']', self.scope).each(function() {
         var expedition = $(this),
-            settings = settings = expedition.data(self.attr_name(true) + '-init'),
+            settings = expedition.data(self.attr_name(true) + '-init'),
             offsets = self.offsets(expedition, window_top_offset),
             arrivals = expedition.find('[' + self.add_namespace('data-magellan-arrival') + ']'),
             active_item = false;
@@ -12459,7 +12516,7 @@ return jQuery;
       $('[' + self.add_namespace('data-magellan-expedition-clone') + ']', self.scope).remove();
     }
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -12467,50 +12524,108 @@ return jQuery;
   Foundation.libs.offcanvas = {
     name : 'offcanvas',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
-    settings : {},
+    settings : {
+      open_method: 'move',
+      close_on_click: true
+    },
 
     init : function (scope, method, options) {
-      this.events();
+      this.bindings(method, options);
     },
 
     events : function () {
       var self = this,
-          S = self.S;
+          S = self.S,
+          move_class = '',
+          right_postfix = '',
+          left_postfix = '';
+
+      if (this.settings.open_method === 'move') {
+        move_class = 'move-';
+        right_postfix = 'right';
+        left_postfix = 'left';
+      } else if (this.settings.open_method === 'overlap') {
+        move_class = 'offcanvas-overlap';
+      }
 
       S(this.scope).off('.offcanvas')
         .on('click.fndtn.offcanvas', '.left-off-canvas-toggle', function (e) {
-          self.click_toggle_class(e, 'move-right');
+          self.click_toggle_class(e, move_class + right_postfix);
         })
         .on('click.fndtn.offcanvas', '.left-off-canvas-menu a', function (e) {
-          S(".off-canvas-wrap").removeClass("move-right");
+          var settings = self.get_settings(e);
+          if (settings.close_on_click) {
+            self.hide.call(self, move_class + right_postfix, self.get_wrapper(e));
+          }
         })
         .on('click.fndtn.offcanvas', '.right-off-canvas-toggle', function (e) {
-          self.click_toggle_class(e, 'move-left');
+          self.click_toggle_class(e, move_class + left_postfix);
         })
         .on('click.fndtn.offcanvas', '.right-off-canvas-menu a', function (e) {
-          S(".off-canvas-wrap").removeClass("move-left");
+          var settings = self.get_settings(e);
+          if (settings.close_on_click) {
+            self.hide.call(self, move_class + left_postfix, self.get_wrapper(e));
+          }
         })
         .on('click.fndtn.offcanvas', '.exit-off-canvas', function (e) {
-          self.click_remove_class(e, 'move-left');
-          self.click_remove_class(e, 'move-right');
-        })
+          self.click_remove_class(e, move_class + left_postfix);
+          if (right_postfix) self.click_remove_class(e, move_class + right_postfix);
+        });
+
+    },
+
+    toggle: function(class_name, $off_canvas) {
+      $off_canvas = $off_canvas || this.get_wrapper();
+      if ($off_canvas.is('.' + class_name)) {
+        this.hide(class_name, $off_canvas);
+      } else {
+        this.show(class_name, $off_canvas);
+      }
+    },
+
+    show: function(class_name, $off_canvas) {
+      $off_canvas = $off_canvas || this.get_wrapper();
+      $off_canvas.trigger('open').trigger('open.fndtn.offcanvas');
+      $off_canvas.addClass(class_name);
+    },
+
+    hide: function(class_name, $off_canvas) {
+      $off_canvas = $off_canvas || this.get_wrapper();
+      $off_canvas.trigger('close').trigger('close.fndtn.offcanvas');
+      $off_canvas.removeClass(class_name);
     },
 
     click_toggle_class: function(e, class_name) {
       e.preventDefault();
-      this.S(e.target).closest('.off-canvas-wrap').toggleClass(class_name);
+      var $off_canvas = this.get_wrapper(e);
+      this.toggle(class_name, $off_canvas);
     },
 
     click_remove_class: function(e, class_name) {
       e.preventDefault();
-      this.S('.off-canvas-wrap').removeClass(class_name);
+      var $off_canvas = this.get_wrapper(e);
+      this.hide(class_name, $off_canvas);
+    },
+
+    get_settings: function(e) {
+      var offcanvas  = this.S(e.target).closest('[' + this.attr_name() + ']');
+      return offcanvas.data(this.attr_name(true) + '-init') || this.settings;
+    },
+
+    get_wrapper: function(e) {
+      var $off_canvas = this.S(e ? e.target : this.scope).closest('.off-canvas-wrap');
+
+      if ($off_canvas.length === 0) {
+        $off_canvas = this.S('.off-canvas-wrap');
+      }
+      return $off_canvas;
     },
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -12531,16 +12646,16 @@ return jQuery;
         timer_container,
         idx = 0,
         animate,
-        adjust_height_after = false,
-        has_init_active = slides_container.find("." + settings.active_slide_class).length > 0;
+        timer,
+        locked = false,
+        adjust_height_after = false;
 
-    self.cache = {};
 
     self.slides = function() {
       return slides_container.children(settings.slide_selector);
     };
 
-    if (!has_init_active) {self.slides().first().addClass(settings.active_slide_class)};
+    self.slides().first().addClass(settings.active_slide_class);
 
     self.update_slide_number = function(index) {
       if (settings.slide_number) {
@@ -12554,7 +12669,7 @@ return jQuery;
     };
 
     self.update_active_link = function(index) {
-      var link = $('[data-orbit-link="'+self.slides().eq(index).attr('data-orbit-slide')+'"]');
+      var link = $('a[data-orbit-link="'+self.slides().eq(index).attr('data-orbit-slide')+'"]');
       link.siblings().removeClass(settings.bullets_active_class);
       link.addClass(settings.bullets_active_class);
     };
@@ -12563,7 +12678,6 @@ return jQuery;
       slides_container.wrap('<div class="'+settings.container_class+'"></div>');
       container = slides_container.parent();
       slides_container.addClass(settings.slides_container_class);
-      slides_container.addClass(settings.animation);
       
       if (settings.stack_on_small) {
         container.addClass(settings.stack_on_small_class);
@@ -12577,9 +12691,7 @@ return jQuery;
       if (settings.timer) {
         timer_container = $('<div>').addClass(settings.timer_container_class);
         timer_container.append('<span>');
-        if (settings.timer_show_progress_bar) {
-            timer_container.append($('<div>').addClass(settings.timer_progress_class));
-        }
+        timer_container.append($('<div>').addClass(settings.timer_progress_class));
         timer_container.addClass(settings.timer_paused_class);
         container.append(timer_container);
       }
@@ -12595,26 +12707,22 @@ return jQuery;
         container.append(bullets_container);
         bullets_container.wrap('<div class="orbit-bullets-container"></div>');
         self.slides().each(function(idx, el) {
-          var bullet = $('<li>').attr('data-orbit-slide', idx);
+          var bullet = $('<li>').attr('data-orbit-slide', idx).on('click', self.link_bullet);;
           bullets_container.append(bullet);
         });
       }
 
     };
 
-    self._prepare_direction = function(next_idx, current_direction) {
-      var dir = 'next';
-      if (next_idx <= idx) { dir = 'prev'; }
-      
-      if (settings.animation === 'slide') {    
-        setTimeout(function(){
-          slides_container.removeClass("swipe-prev swipe-next");
-          if (dir === 'next') {slides_container.addClass("swipe-next");}
-          else if (dir === 'prev') {slides_container.addClass("swipe-prev");}
-        },0);
-      }
-      
+    self._goto = function(next_idx, start_timer) {
+      // if (locked) {return false;}
+      if (next_idx === idx) {return false;}
+      if (typeof timer === 'object') {timer.restart();}
       var slides = self.slides();
+
+      var dir = 'next';
+      locked = true;
+      if (next_idx < idx) {dir = 'prev';}
       if (next_idx >= slides.length) {
         if (!settings.circular) return false;
         next_idx = 0;
@@ -12622,48 +12730,26 @@ return jQuery;
         if (!settings.circular) return false;
         next_idx = slides.length - 1;
       }
-      var current = $(slides.get(idx))
-        , next = $(slides.get(next_idx));
       
-      return [dir, current, next, next_idx];
-    };
+      var current = $(slides.get(idx));
+      var next = $(slides.get(next_idx));
 
-    self._goto = function(next_idx, start_timer) {
-      if (next_idx === null) {return false;}
-      if (self.cache.animating) {return false;}
-      if (next_idx === idx) {return false;}
-      if (typeof self.cache.timer === 'object') {self.cache.timer.restart();}
-      
-      var slides = self.slides();
-      self.cache.animating = true;
-      var res = self._prepare_direction(next_idx)
-        , dir = res[0]
-        , current = res[1]
-        , next = res[2]
-        , next_idx = res[3];
-
-      // This means that circular is disabled and we most likely reached the last slide.
-      if (res === false) return false;
+      current.css('zIndex', 2);
+      current.removeClass(settings.active_slide_class);
+      next.css('zIndex', 4).addClass(settings.active_slide_class);
 
       slides_container.trigger('before-slide-change.fndtn.orbit');
       settings.before_slide_change();
-      idx = next_idx;
-
-      current.css("transitionDuration", settings.animation_speed+"ms");
-      next.css("transitionDuration", settings.animation_speed+"ms");
+      self.update_active_link(next_idx);
       
       var callback = function() {
         var unlock = function() {
-          if (start_timer === true) {self.cache.timer.restart();}
+          idx = next_idx;
+          locked = false;
+          if (start_timer === true) {timer = self.create_timer(); timer.start();}
           self.update_slide_number(idx);
-          next.addClass(settings.active_slide_class);
-          self.update_active_link(next_idx);
           slides_container.trigger('after-slide-change.fndtn.orbit',[{slide_number: idx, total_slides: slides.length}]);
           settings.after_slide_change(idx, slides.length);
-          setTimeout(function(){
-            self.cache.animating = false;
-          }, 100);
-          
         };
         if (slides_container.height() != next.height() && settings.variable_height) {
           slides_container.animate({'height': next.height()}, 250, 'linear', unlock);
@@ -12689,19 +12775,13 @@ return jQuery;
     self.next = function(e) {
       e.stopImmediatePropagation();
       e.preventDefault();
-      self._prepare_direction(idx + 1);
-      setTimeout(function(){
-        self._goto(idx + 1);
-    }, 100);
+      self._goto(idx + 1);
     };
     
     self.prev = function(e) {
       e.stopImmediatePropagation();
       e.preventDefault();
-      self._prepare_direction(idx - 1);
-      setTimeout(function(){
-        self._goto(idx - 1)
-      }, 100);
+      self._goto(idx - 1);
     };
 
     self.link_custom = function(e) {
@@ -12709,11 +12789,7 @@ return jQuery;
       var link = $(this).attr('data-orbit-link');
       if ((typeof link === 'string') && (link = $.trim(link)) != "") {
         var slide = container.find('[data-orbit-slide='+link+']');
-        if (slide.index() != -1) {
-          setTimeout(function(){
-            self._goto(slide.index());
-          },100);
-        }
+        if (slide.index() != -1) {self._goto(slide.index());}
       }
     };
 
@@ -12723,17 +12799,11 @@ return jQuery;
         if(isNaN(parseInt(index)))
         {
           var slide = container.find('[data-orbit-slide='+index+']');
-          if (slide.index() != -1) {
-            setTimeout(function(){
-              self._goto(slide.index() + 1);
-            },100);
-          }
+          if (slide.index() != -1) {self._goto(slide.index() + 1);}
         }
         else
         {
-          setTimeout(function(){
-            self._goto(parseInt(index));
-          },100);
+          self._goto(parseInt(index));
         }
       }
 
@@ -12764,114 +12834,76 @@ return jQuery;
     };
 
     self.stop_timer = function() {
-      if (typeof self.cache.timer === 'object') self.cache.timer.stop();
+      if (typeof timer === 'object') timer.stop();
     };
 
     self.toggle_timer = function() {
       var t = container.find('.'+settings.timer_container_class);
       if (t.hasClass(settings.timer_paused_class)) {
-        if (typeof self.cache.timer === 'undefined') {self.cache.timer = self.create_timer();}
-        self.cache.timer.start();     
+        if (typeof timer === 'undefined') {timer = self.create_timer();}
+        timer.start();     
       }
       else {
-        if (typeof self.cache.timer === 'object') {self.cache.timer.stop();}
+        if (typeof timer === 'object') {timer.stop();}
       }
     };
 
     self.init = function() {
       self.build_markup();
       if (settings.timer) {
-        self.cache.timer = self.create_timer(); 
-        Foundation.utils.image_loaded(this.slides().children('img'), self.cache.timer.start);
+        timer = self.create_timer(); 
+        Foundation.utils.image_loaded(this.slides().children('img'), timer.start);
       }
-      
-      animate = new CSSAnimation(settings, slides_container);
-
-      if (has_init_active) {
-        var $init_target = slides_container.find("." + settings.active_slide_class),
-            animation_speed = settings.animation_speed;
-        settings.animation_speed = 1;
-        $init_target.removeClass('active');
-        self._goto($init_target.index());
-        settings.animation_speed = animation_speed;
-      }
+      animate = new FadeAnimation(settings, slides_container);
+      if (settings.animation === 'slide') 
+        animate = new SlideAnimation(settings, slides_container);        
 
       container.on('click', '.'+settings.next_class, self.next);
       container.on('click', '.'+settings.prev_class, self.prev);
 
       if (settings.next_on_click) {
-        container.on('click', '[data-orbit-slide]', self.link_bullet);
+        container.on('click', '.'+settings.slides_container_class+' [data-orbit-slide]', self.link_bullet);
       }
-      
+
       container.on('click', self.toggle_timer);
       if (settings.swipe) {
-        slides_container.on('touchstart.fndtn.orbit',function(e) {
-          if (self.cache.animating) {return;}
+        container.on('touchstart.fndtn.orbit', function(e) {
           if (!e.touches) {e = e.originalEvent;}
-          e.preventDefault();
+          var data = {
+            start_page_x: e.touches[0].pageX,
+            start_page_y: e.touches[0].pageY,
+            start_time: (new Date()).getTime(),
+            delta_x: 0,
+            is_scrolling: undefined
+          };
+          container.data('swipe-transition', data);
           e.stopPropagation();
-
-          self.cache.start_page_x = e.touches[0].pageX;
-          self.cache.start_page_y = e.touches[0].pageY;
-          self.cache.start_time = (new Date()).getTime();
-          self.cache.delta_x = 0;
-          self.cache.is_scrolling = null;
-          self.cache.direction = null;
-          
-          self.stop_timer(); // does not appear to prevent callback from occurring          
         })
-        .on('touchmove.fndtn.orbit',function(e) {
-          if (Math.abs(self.cache.delta_x) > 5) {
-            e.preventDefault();
-            e.stopPropagation();
+        .on('touchmove.fndtn.orbit', function(e) {
+          if (!e.touches) { e = e.originalEvent; }
+          // Ignore pinch/zoom events
+          if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+
+          var data = container.data('swipe-transition');
+          if (typeof data === 'undefined') {data = {};}
+
+          data.delta_x = e.touches[0].pageX - data.start_page_x;
+
+          if ( typeof data.is_scrolling === 'undefined') {
+            data.is_scrolling = !!( data.is_scrolling || Math.abs(data.delta_x) < Math.abs(e.touches[0].pageY - data.start_page_y) );
           }
 
-          if (self.cache.animating) {return;}          
-          requestAnimationFrame(function(){
-            if (!e.touches) { e = e.originalEvent; }
-
-            // Ignore pinch/zoom events
-            if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
-
-            self.cache.delta_x = e.touches[0].pageX - self.cache.start_page_x;
-
-            if (self.cache.is_scrolling === null) {
-              self.cache.is_scrolling = !!( self.cache.is_scrolling || Math.abs(self.cache.delta_x) < Math.abs(e.touches[0].pageY - self.cache.start_page_y) );
-            }
-
-            if (self.cache.is_scrolling) {
-              return;
-            }
-            
-            var direction = (self.cache.delta_x < 0) ? (idx+1) : (idx-1);
-            if (self.cache.direction !== direction) {
-              var res = self._prepare_direction(direction);
-              self.cache.direction = direction;
-              self.cache.dir = res[0];
-              self.cache.current = res[1];
-              self.cache.next = res[2];
-            }
-
-            if (settings.animation === 'slide') {
-              var offset, next_offset;
-              
-              offset = (self.cache.delta_x / container.width()) * 100;
-              if (offset >= 0) {next_offset = -(100 - offset);}
-              else {next_offset = 100 + offset;}
-
-              self.cache.current.css("transform","translate3d("+offset+"%,0,0)");
-              self.cache.next.css("transform","translate3d("+next_offset+"%,0,0)");
-            }
-          });
+          if (!data.is_scrolling && !data.active) {
+            e.preventDefault();
+            var direction = (data.delta_x < 0) ? (idx+1) : (idx-1);
+            data.active = true;
+            self._goto(direction);
+          }
         })
         .on('touchend.fndtn.orbit', function(e) {
-          if (self.cache.animating) {return;}
-          e.preventDefault();
+          container.data('swipe-transition', {});
           e.stopPropagation();
-          setTimeout(function(){
-            self._goto(self.cache.direction);
-          }, 50);
-        });
+        })
       }
       container.on('mouseenter.fndtn.orbit', function(e) {
         if (settings.timer && settings.pause_on_hover) {
@@ -12880,18 +12912,17 @@ return jQuery;
       })
       .on('mouseleave.fndtn.orbit', function(e) {
         if (settings.timer && settings.resume_on_mouseout) {
-          self.cache.timer.start();
+          timer.start();
         }
       });
       
       $(document).on('click', '[data-orbit-link]', self.link_custom);
       $(window).on('load resize', self.compute_dimensions);
-      var children = this.slides().find('img');
-      Foundation.utils.image_loaded(children, self.compute_dimensions);
-      Foundation.utils.image_loaded(children, function() {
+      Foundation.utils.image_loaded(this.slides().children('img'), self.compute_dimensions);
+      Foundation.utils.image_loaded(this.slides().children('img'), function() {
         container.prev('.'+settings.preloader_class).css('display', 'none');
-        self.update_slide_number(idx);
-        self.update_active_link(idx);
+        self.update_slide_number(0);
+        self.update_active_link(0);
         slides_container.trigger('ready.fndtn.orbit');
       });
     };
@@ -12903,7 +12934,6 @@ return jQuery;
     var self = this,
         duration = settings.timer_speed,
         progress = el.find('.'+settings.timer_progress_class),
-        do_progress = progress && progress.css('display') != 'none',
         start, 
         timeout,
         left = -1;
@@ -12920,18 +12950,15 @@ return jQuery;
       clearTimeout(timeout);
       el.addClass(settings.timer_paused_class);
       left = -1;
-      if (do_progress) {self.update_progress(0);}
-      self.start();
+      self.update_progress(0);
     };
 
     this.start = function() {
       if (!el.hasClass(settings.timer_paused_class)) {return true;}
       left = (left === -1) ? duration : left;
       el.removeClass(settings.timer_paused_class);
-      if (do_progress) {
-          start = new Date().getTime();
-          progress.animate({'width': '100%'}, left, 'linear');
-      }
+      start = new Date().getTime();
+      progress.animate({'width': '100%'}, left, 'linear');
       timeout = setTimeout(function() {
         self.restart();
         callback();
@@ -12943,103 +12970,58 @@ return jQuery;
       if (el.hasClass(settings.timer_paused_class)) {return true;}
       clearTimeout(timeout);
       el.addClass(settings.timer_paused_class);
-      if (do_progress) {
-          var end = new Date().getTime();
-          left = left - (end - start);
-          var w = 100 - ((left / duration) * 100);
-          self.update_progress(w);
-      }
+      var end = new Date().getTime();
+      left = left - (end - start);
+      var w = 100 - ((left / duration) * 100);
+      self.update_progress(w);
       el.trigger('timer-stopped.fndtn.orbit');
     };
   };
-
-  var CSSAnimation = function(settings, container) {
-    var animation_end = "webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend";
+  
+  var SlideAnimation = function(settings, container) {
+    var duration = settings.animation_speed;
+    var is_rtl = ($('html[dir=rtl]').length === 1);
+    var margin = is_rtl ? 'marginRight' : 'marginLeft';
+    var animMargin = {};
+    animMargin[margin] = '0%';
 
     this.next = function(current, next, callback) {
-      if (Modernizr.csstransitions) {
-        next.on(animation_end, function(e){
-          next.unbind(animation_end);
-          current.removeClass("active animate-out");
-          next.removeClass("animate-in");
-          container.children().css({
-            "transform":"",
-            "-ms-transform":"",
-            "-webkit-transition-duration":"",
-            "-moz-transition-duration": "",
-            "-o-transition-duration": "",
-            "transition-duration":""
-          });
-          callback();
-        });
-      } else {
-        setTimeout(function(){
-          current.removeClass("active animate-out");
-          next.removeClass("animate-in");
-          container.children().css({
-            "transform":"",
-            "-ms-transform":"",
-            "-webkit-transition-duration":"",
-            "-moz-transition-duration": "",
-            "-o-transition-duration": "",
-            "transition-duration":""
-          });
-          callback();
-        }, settings.animation_speed);
-      }
-      container.children().css({
-        "transform":"",
-        "-ms-transform":"",
-        "-webkit-transition-duration":"",
-        "-moz-transition-duration": "",
-        "-o-transition-duration": "",
-        "transition-duration":""
+      current.animate({marginLeft:'-100%'}, duration);
+      next.animate(animMargin, duration, function() {
+        current.css(margin, '100%');
+        callback();
       });
-      current.addClass("animate-out");
-      next.addClass("animate-in");
     };
 
     this.prev = function(current, prev, callback) {
-      if (Modernizr.csstransitions) {
-        prev.on(animation_end, function(e){
-          prev.unbind(animation_end);
-          current.removeClass("active animate-out");
-          prev.removeClass("animate-in");
-          container.children().css({
-            "transform":"",
-            "-ms-transform":"",
-            "-webkit-transition-duration":"",
-            "-moz-transition-duration": "",
-            "-o-transition-duration": "",
-            "transition-duration":""
-          });
-          callback();
-        });
-      } else {
-        setTimeout(function(){
-          current.removeClass("active animate-out");
-          prev.removeClass("animate-in");
-          container.children().css({
-            "transform":"",
-            "-ms-transform":"",
-            "-webkit-transition-duration":"",
-            "-moz-transition-duration": "",
-            "-o-transition-duration": "",
-            "transition-duration":""
-          });
-          callback();
-        }, settings.animation_speed);
-      }
-      container.children().css({
-        "transform":"",
-        "-ms-transform":"",
-        "-webkit-transition-duration":"",
-        "-moz-transition-duration": "",
-        "-o-transition-duration": "",
-        "transition-duration":""
+      current.animate({marginLeft:'100%'}, duration);
+      prev.css(margin, '-100%');
+      prev.animate(animMargin, duration, function() {
+        current.css(margin, '100%');
+        callback();
       });
-      current.addClass("animate-out");
-      prev.addClass("animate-in");
+    };
+  };
+
+  var FadeAnimation = function(settings, container) {
+    var duration = settings.animation_speed;
+    var is_rtl = ($('html[dir=rtl]').length === 1);
+    var margin = is_rtl ? 'marginRight' : 'marginLeft';
+
+    this.next = function(current, next, callback) {
+      next.css({'margin':'0%', 'opacity':'0.01'});
+      next.animate({'opacity':'1'}, duration, 'linear', function() {
+        current.css('margin', '100%');
+        callback();
+      });
+    };
+
+    this.prev = function(current, prev, callback) {
+      prev.css({'margin':'0%', 'opacity':'0.01'});
+      prev.animate({'opacity':'1'}, duration, 'linear', function() {
+        current.css('margin', '100%');
+        callback();
+      });
     };
   };
 
@@ -13049,7 +13031,7 @@ return jQuery;
   Foundation.libs.orbit = {
     name: 'orbit',
 
-    version: '5.2.2',
+    version: '5.3.0',
 
     settings: {
       animation: 'slide',
@@ -13069,7 +13051,6 @@ return jQuery;
       timer_container_class: 'orbit-timer',
       timer_paused_class: 'paused',
       timer_progress_class: 'orbit-progress',
-      timer_show_progress_bar: true,
       slides_container_class: 'orbit-slides-container',
       preloader_class: 'preloader',
       slide_selector: '*',
@@ -13117,15 +13098,14 @@ return jQuery;
   };
 
     
-}(jQuery, this, this.document));
-
+}(jQuery, window, window.document));
 ;(function ($, window, document, undefined) {
   'use strict';
 
   Foundation.libs.reveal = {
     name : 'reveal',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     locked : false,
 
@@ -13136,6 +13116,7 @@ return jQuery;
       close_on_esc: true,
       dismiss_modal_class: 'close-reveal-modal',
       bg_class: 'reveal-modal-bg',
+      root_element: 'body',
       open: function(){},
       opened: function(){},
       close: function(){},
@@ -13166,7 +13147,7 @@ return jQuery;
 
       S(this.scope)
         .off('.reveal')
-        .on('click.fndtn.reveal', '[' + this.add_namespace('data-reveal-id') + ']', function (e) {
+        .on('click.fndtn.reveal', '[' + this.add_namespace('data-reveal-id') + ']:not([disabled])', function (e) {
           e.preventDefault();
 
           if (!self.locked) {
@@ -13255,20 +13236,24 @@ return jQuery;
     },
 
     open : function (target, ajax_settings) {
-      var self = this;
+      var self = this,
+          modal;
+
       if (target) {
         if (typeof target.selector !== 'undefined') {
-          var modal = self.S('#' + target.data(self.data_attr('reveal-id')));
+          // Find the named node; only use the first one found, since the rest of the code assumes there's only one node
+          modal = self.S('#' + target.data(self.data_attr('reveal-id'))).first();
         } else {
-          var modal = self.S(this.scope);
+          modal = self.S(this.scope);
 
           ajax_settings = target;
         }
       } else {
-        var modal = self.S(this.scope);
+        modal = self.S(this.scope);
       }
 
       var settings = modal.data(self.attr_name(true) + '-init');
+      settings = settings || this.settings;
 
       if (!modal.hasClass('open')) {
         var open_modal = self.S('[' + self.attr_name() + '].open');
@@ -13279,10 +13264,10 @@ return jQuery;
         }
 
         this.key_up_on(modal);    // PATCH #3: turning on key up capture only when a reveal window is open
-        modal.trigger('open');
+        modal.trigger('open').trigger('open.fndtn.reveal');
 
         if (open_modal.length < 1) {
-          this.toggle_bg(modal);
+          this.toggle_bg(modal, true);
         }
 
         if (typeof ajax_settings === 'string') {
@@ -13308,6 +13293,7 @@ return jQuery;
 
               modal.html(data);
               self.S(modal).foundation('section', 'reflow');
+              self.S(modal).children().foundation();
 
               if (open_modal.length > 0) {
                 self.hide(open_modal, settings.css.close);
@@ -13324,13 +13310,13 @@ return jQuery;
     close : function (modal) {
       var modal = modal && modal.length ? modal : this.S(this.scope),
           open_modals = this.S('[' + this.attr_name() + '].open'),
-          settings = modal.data(this.attr_name(true) + '-init');
+          settings = modal.data(this.attr_name(true) + '-init') || this.settings;
 
       if (open_modals.length > 0) {
         this.locked = true;
         this.key_up_off(modal);   // PATCH #3: turning on key up capture only when a reveal window is open
-        modal.trigger('close');
-        this.toggle_bg(modal);
+        modal.trigger('close').trigger('close.fndtn.reveal');
+        this.toggle_bg(modal, false);
         this.hide(open_modals, settings.css.close, settings);
       }
     },
@@ -13345,35 +13331,37 @@ return jQuery;
       return base;
     },
 
-    toggle_bg : function (modal) {
-      var settings = modal.data(this.attr_name(true));
-
+    toggle_bg : function (modal, state) {
       if (this.S('.' + this.settings.bg_class).length === 0) {
         this.settings.bg = $('<div />', {'class': this.settings.bg_class})
           .appendTo('body').hide();
       }
 
-      if (this.settings.bg.filter(':visible').length > 0) {
-        this.hide(this.settings.bg);
-      } else {
-        this.show(this.settings.bg);
+      var visible = this.settings.bg.filter(':visible').length > 0;
+      if ( state != visible ) {
+        if ( state == undefined ? visible : !state ) {
+          this.hide(this.settings.bg);
+        } else {
+          this.show(this.settings.bg);
+        }
       }
     },
 
     show : function (el, css) {
       // is modal
       if (css) {
-        var settings = el.data(this.attr_name(true) + '-init');
-        if (el.parent('body').length === 0) {
-          var placeholder = el.wrap('<div style="display: none;" />').parent(),
-              rootElement = this.settings.rootElement || 'body';
+        var settings = el.data(this.attr_name(true) + '-init') || this.settings,
+            root_element = settings.root_element;
+
+        if (el.parent(root_element).length === 0) {
+          var placeholder = el.wrap('<div style="display: none;" />').parent();
 
           el.on('closed.fndtn.reveal.wrapped', function() {
             el.detach().appendTo(placeholder);
             el.unwrap().unbind('closed.fndtn.reveal.wrapped');
           });
 
-          el.detach().appendTo(rootElement);
+          el.detach().appendTo(root_element);
         }
 
         var animData = getAnimationData(settings.animation);
@@ -13392,7 +13380,7 @@ return jQuery;
               .css(css)
               .animate(end_css, settings.animation_speed, 'linear', function () {
                 this.locked = false;
-                el.trigger('opened');
+                el.trigger('opened').trigger('opened.fndtn.reveal');
               }.bind(this))
               .addClass('open');
           }.bind(this), settings.animation_speed / 2);
@@ -13407,13 +13395,13 @@ return jQuery;
               .css(css)
               .animate(end_css, settings.animation_speed, 'linear', function () {
                 this.locked = false;
-                el.trigger('opened');
+                el.trigger('opened').trigger('opened.fndtn.reveal');
               }.bind(this))
               .addClass('open');
           }.bind(this), settings.animation_speed / 2);
         }
 
-        return el.css(css).show().css({opacity: 1}).addClass('open').trigger('opened');
+        return el.css(css).show().css({opacity: 1}).addClass('open').trigger('opened').trigger('opened.fndtn.reveal');
       }
 
       var settings = this.settings;
@@ -13432,6 +13420,8 @@ return jQuery;
       // is modal
       if (css) {
         var settings = el.data(this.attr_name(true) + '-init');
+        settings = settings || this.settings;
+
         var animData = getAnimationData(settings.animation);
         if (!animData.animate) {
           this.locked = false;
@@ -13446,7 +13436,7 @@ return jQuery;
             return el
               .animate(end_css, settings.animation_speed, 'linear', function () {
                 this.locked = false;
-                el.css(css).trigger('closed');
+                el.css(css).trigger('closed').trigger('closed.fndtn.reveal');
               }.bind(this))
               .removeClass('open');
           }.bind(this), settings.animation_speed / 2);
@@ -13459,13 +13449,13 @@ return jQuery;
             return el
               .animate(end_css, settings.animation_speed, 'linear', function () {
                 this.locked = false;
-                el.css(css).trigger('closed');
+                el.css(css).trigger('closed').trigger('closed.fndtn.reveal');
               }.bind(this))
               .removeClass('open');
           }.bind(this), settings.animation_speed / 2);
         }
 
-        return el.hide().css(css).removeClass('open').trigger('closed');
+        return el.hide().css(css).removeClass('open').trigger('closed').trigger('closed.fndtn.reveal');
       }
 
       var settings = this.settings;
@@ -13545,7 +13535,7 @@ return jQuery;
       fade: fade
     };
   }
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -13553,7 +13543,7 @@ return jQuery;
   Foundation.libs.slider = {
     name : 'slider',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings: {
       start: 0,
@@ -13561,6 +13551,7 @@ return jQuery;
       step: 1,
       initial: null,
       display_selector: '',
+      vertical: false,
       on_change: function(){}
     },
 
@@ -13578,7 +13569,7 @@ return jQuery;
       $(this.scope)
         .off('.slider')
         .on('mousedown.fndtn.slider touchstart.fndtn.slider pointerdown.fndtn.slider',
-        '[' + self.attr_name() + '] .range-slider-handle', function(e) {
+        '[' + self.attr_name() + ']:not(.disabled, [disabled]) .range-slider-handle', function(e) {
           if (!self.cache.active) {
             e.preventDefault();
             self.set_active_slider($(e.target));
@@ -13587,7 +13578,17 @@ return jQuery;
         .on('mousemove.fndtn.slider touchmove.fndtn.slider pointermove.fndtn.slider', function(e) {
           if (!!self.cache.active) {
             e.preventDefault();
-            self.calculate_position(self.cache.active, e.pageX || e.originalEvent.clientX || e.originalEvent.touches[0].clientX || e.currentPoint.x);
+            if ($.data(self.cache.active[0], 'settings').vertical) {
+              self.calculate_position(self.cache.active, e.pageY || 
+                                                         e.originalEvent.clientY || 
+                                                         e.originalEvent.touches[0].clientY || 
+                                                         e.currentPoint.y);
+            } else {
+              self.calculate_position(self.cache.active, e.pageX || 
+                                                         e.originalEvent.clientX || 
+                                                         e.originalEvent.touches[0].clientX || 
+                                                         e.currentPoint.x);
+            }
           }
         })
         .on('mouseup.fndtn.slider touchend.fndtn.slider pointerup.fndtn.slider', function(e) {
@@ -13613,20 +13614,22 @@ return jQuery;
 
     calculate_position : function($handle, cursor_x) {
       var self = this,
-          settings = $.extend({}, self.settings, self.data_options($handle.parent())),
-          handle_w = $.data($handle[0], 'handle_w'),
+          settings = $.data($handle[0], 'settings'),
+          handle_l = $.data($handle[0], 'handle_l'),
           handle_o = $.data($handle[0], 'handle_o'),
-          bar_w = $.data($handle[0], 'bar_w'),
+          bar_l = $.data($handle[0], 'bar_l'),
           bar_o = $.data($handle[0], 'bar_o');
 
       requestAnimationFrame(function(){
         var pct;
 
-        if (Foundation.rtl) {
-          pct = self.limit_to(((bar_o+bar_w-cursor_x)/bar_w),0,1);
+        if (Foundation.rtl && !settings.vertical) {
+          pct = self.limit_to(((bar_o+bar_l-cursor_x)/bar_l),0,1);
         } else {
-          pct = self.limit_to(((cursor_x-bar_o)/bar_w),0,1);
+          pct = self.limit_to(((cursor_x-bar_o)/bar_l),0,1);
         }
+
+        pct = settings.vertical ? 1-pct : pct;
 
         var norm = self.normalized_value(pct, settings.start, settings.end, settings.step);
 
@@ -13635,22 +13638,27 @@ return jQuery;
     },
 
     set_ui : function($handle, value) {
-      var settings = $.extend({}, this.settings, this.data_options($handle.parent())),
-          handle_w = $.data($handle[0], 'handle_w'),
-          bar_w = $.data($handle[0], 'bar_w'),
+      var settings = $.data($handle[0], 'settings'),
+          handle_l = $.data($handle[0], 'handle_l'),
+          bar_l = $.data($handle[0], 'bar_l'),
           norm_pct = this.normalized_percentage(value, settings.start, settings.end),
-          handle_offset = norm_pct*(bar_w-handle_w)-1,
-          progress_bar_width = norm_pct*100;
+          handle_offset = norm_pct*(bar_l-handle_l)-1,
+          progress_bar_length = norm_pct*100;
 
-      if (Foundation.rtl) {
+      if (Foundation.rtl && !settings.vertical) {
         handle_offset = -handle_offset;
       }
 
-      this.set_translate($handle, handle_offset);
-      $handle.siblings('.range-slider-active-segment').css('width', progress_bar_width+'%');
+      handle_offset = settings.vertical ? -handle_offset + bar_l - handle_l + 1 : handle_offset;
+      this.set_translate($handle, handle_offset, settings.vertical);
 
-      $handle.parent().attr(this.attr_name(), value);
-      $handle.parent().trigger('change');
+      if (settings.vertical) {
+        $handle.siblings('.range-slider-active-segment').css('height', progress_bar_length + '%');
+      } else {
+        $handle.siblings('.range-slider-active-segment').css('width', progress_bar_length + '%');
+      }
+
+      $handle.parent().attr(this.attr_name(), value).trigger('change').trigger('change.fndtn.slider');
 
       $handle.parent().children('input[type=hidden]').val(value);
 
@@ -13672,7 +13680,6 @@ return jQuery;
 
     normalized_value : function(val, start, end, step) {
       var range = end - start,
-          step = step,
           point = val*range,
           mod = (point-(point%step)) / step,
           rem = point % step,
@@ -13703,12 +13710,22 @@ return jQuery;
     },
 
     initialize_settings : function(handle) {
+      var settings = $.extend({}, this.settings, this.data_options($(handle).parent()));
+
+      if (settings.vertical) {
+        $.data(handle, 'bar_o', $(handle).parent().offset().top);
+        $.data(handle, 'bar_l', $(handle).parent().outerHeight());
+        $.data(handle, 'handle_o', $(handle).offset().top);
+        $.data(handle, 'handle_l', $(handle).outerHeight());
+      } else {
+        $.data(handle, 'bar_o', $(handle).parent().offset().left);
+        $.data(handle, 'bar_l', $(handle).parent().outerWidth());
+        $.data(handle, 'handle_o', $(handle).offset().left);
+        $.data(handle, 'handle_l', $(handle).outerWidth());
+      }
+
       $.data(handle, 'bar', $(handle).parent());
-      $.data(handle, 'bar_o', $(handle).parent().offset().left);
-      $.data(handle, 'bar_w', $(handle).parent().outerWidth());
-      $.data(handle, 'handle_o', $(handle).offset().left);
-      $.data(handle, 'handle_w', $(handle).outerWidth());
-      $.data(handle, 'settings', $.extend({}, this.settings, this.data_options($(handle).parent())));
+      $.data(handle, 'settings', settings);
     },
 
     set_initial_position : function($ele) {
@@ -13743,19 +13760,17 @@ return jQuery;
         }
       });
     }
-
   };
 
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
-/*jslint unparam: true, browser: true, indent: 2 */
 ;(function ($, window, document, undefined) {
   'use strict';
 
   Foundation.libs.tab = {
     name : 'tab',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       active_class: 'active',
@@ -13777,7 +13792,7 @@ return jQuery;
       // Store the default active tabs which will be referenced when the
       // location hash is absent, as in the case of navigating the tabs and
       // returning to the first viewing via the browser Back button.
-      S('[' + this.attr_name() + '] > dd.active > a', this.scope).each(function () {
+      S('[' + this.attr_name() + '] > .active > a', this.scope).each(function () {
         self.default_tab_hashes.push(this.hash);
       });
     },
@@ -13789,7 +13804,7 @@ return jQuery;
       S(this.scope)
         .off('.tab')
         // Click event: tab title
-        .on('click.fndtn.tab', '[' + this.attr_name() + '] > dd > a', function (e) {
+        .on('click.fndtn.tab', '[' + this.attr_name() + '] > * > a', function (e) {
           var settings = S(this).closest('[' + self.attr_name() +']').data(self.attr_name(true) + '-init');
           if (!settings.is_hover || Modernizr.touch) {
             e.preventDefault();
@@ -13798,7 +13813,7 @@ return jQuery;
           }
         })
         // Hover event: tab title
-        .on('mouseenter.fndtn.tab', '[' + this.attr_name() + '] > dd > a', function (e) {
+        .on('mouseenter.fndtn.tab', '[' + this.attr_name() + '] > * > a', function (e) {
           var settings = S(this).closest('[' + self.attr_name() +']').data(self.attr_name(true) + '-init');
           if (settings.is_hover) self.toggle_active_tab(S(this).parent());
         });
@@ -13825,19 +13840,19 @@ return jQuery;
             var hash_element = S(hash);
             if (hash_element.hasClass('content') && hash_element.parent().hasClass('tab-content')) {
               // Tab content div
-              self.toggle_active_tab($('[' + self.attr_name() + '] > dd > a[href=' + hash + ']').parent());
+              self.toggle_active_tab($('[' + self.attr_name() + '] > * > a[href=' + hash + ']').parent());
             } else {
               // Not the tab content div. If inside the tab content, find the
               // containing tab and toggle it as active.
               var hash_tab_container_id = hash_element.closest('.content').attr('id');
               if (hash_tab_container_id != undefined) {
-                self.toggle_active_tab($('[' + self.attr_name() + '] > dd > a[href=#' + hash_tab_container_id + ']').parent(), hash);
+                self.toggle_active_tab($('[' + self.attr_name() + '] > * > a[href=#' + hash_tab_container_id + ']').parent(), hash);
               }
             }
           } else {
             // Reference the default tab hashes which were initialized in the init function
             for (var ind in self.default_tab_hashes) {
-              self.toggle_active_tab($('[' + self.attr_name() + '] > dd > a[href=' + self.default_tab_hashes[ind] + ']').parent());
+              self.toggle_active_tab($('[' + self.attr_name() + '] > * > a[href=' + self.default_tab_hashes[ind] + ']').parent());
             }
           }
         }
@@ -13915,7 +13930,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -13923,7 +13938,7 @@ return jQuery;
   Foundation.libs.tooltip = {
     name : 'tooltip',
 
-    version : '5.2.2',
+    version : '5.3.0',
 
     settings : {
       additional_inheritable_classes : [],
@@ -13932,6 +13947,7 @@ return jQuery;
       touch_close_text: 'Tap To Close',
       disable_for_touch: false,
       hover_delay: 200,
+      show_on : 'all',
       tip_template : function (selector, content) {
         return '<span data-selector="' + selector + '" class="'
           + Foundation.libs.tooltip.settings.tooltip_class.substring(1)
@@ -13944,6 +13960,29 @@ return jQuery;
     init : function (scope, method, options) {
       Foundation.inherit(this, 'random_str');
       this.bindings(method, options);
+    },
+
+    should_show: function (target, tip) {
+      var settings = $.extend({}, this.settings, this.data_options(target));
+
+      if (settings.show_on === 'all') {
+        return true;
+      } else if (this.small() && settings.show_on === 'small') {
+        return true;
+      } else if (this.medium() && settings.show_on === 'medium') {
+        return true;
+      } else if (this.large() && settings.show_on === 'large') {
+        return true;
+      }
+      return false;
+    },
+
+    medium : function () {
+      return matchMedia(Foundation.media_queries['medium']).matches;
+    },
+
+    large : function () {
+      return matchMedia(Foundation.media_queries['large']).matches;
     },
 
     events : function (instance) {
@@ -14014,8 +14053,10 @@ return jQuery;
 
     showTip : function ($target) {
       var $tip = this.getTip($target);
-
+      if (this.should_show($target, $tip)){
         return this.show($target);
+      }
+      return;
     },
 
     getTip : function ($target) {
@@ -14087,7 +14128,7 @@ return jQuery;
           'top' : (top) ? top : 'auto',
           'bottom' : (bottom) ? bottom : 'auto',
           'left' : (left) ? left : 'auto',
-          'right' : (right) ? right : 'auto',
+          'right' : (right) ? right : 'auto'
         }).end();
       };
 
@@ -14188,7 +14229,7 @@ return jQuery;
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
 
 ;(function ($, window, document, undefined) {
   'use strict';
@@ -14196,7 +14237,7 @@ return jQuery;
   Foundation.libs.topbar = {
     name : 'topbar',
 
-    version: '5.2.2',
+    version: '5.3.0',
 
     settings : {
       index : 0,
@@ -14204,11 +14245,10 @@ return jQuery;
       custom_back_text: true,
       back_text: 'Back',
       is_hover: true,
-      mobile_show_parent_link: false,
       scrolltop : true, // jump to top when sticky nav menu toggle is clicked
       sticky_on : 'all'
     },
-
+    
     init : function (section, method, options) {
       Foundation.inherit(this, 'add_custom_rule register_media throttle');
       var self = this;
@@ -14220,11 +14260,10 @@ return jQuery;
       self.S('[' + this.attr_name() + ']', this.scope).each(function () {
         var topbar = $(this),
             settings = topbar.data(self.attr_name(true) + '-init'),
-            section = self.S('section', this),
-            titlebar = topbar.children().filter('ul').first();
+            section = self.S('section', this);
         topbar.data('index', 0);
         var topbarContainer = topbar.parent();
-        if(topbarContainer.hasClass('fixed') || self.is_sticky(topbar, topbarContainer, settings) ) {
+        if (topbarContainer.hasClass('fixed') || self.is_sticky(topbar, topbarContainer, settings) ) {
           self.settings.sticky_class = settings.sticky_class;
           self.settings.sticky_topbar = topbar;
           topbar.data('height', topbarContainer.outerHeight());
@@ -14233,7 +14272,9 @@ return jQuery;
           topbar.data('height', topbar.outerHeight());
         }
 
-        if (!settings.assembled) self.assemble(topbar);
+        if (!settings.assembled) {
+          self.assemble(topbar);
+        }
 
         if (settings.is_hover) {
           self.S('.has-dropdown', topbar).addClass('not-click');
@@ -14257,23 +14298,30 @@ return jQuery;
       if (sticky && settings.sticky_on === 'all') {
         return true;
       } else if (sticky && this.small() && settings.sticky_on === 'small') {
-        return true;
+        return (matchMedia(Foundation.media_queries.small).matches && !matchMedia(Foundation.media_queries.medium).matches &&
+            !matchMedia(Foundation.media_queries.large).matches); 
+        //return true;
       } else if (sticky && this.medium() && settings.sticky_on === 'medium') {
-        return true;
-      } else if (sticky && this.large() && settings.sticky_on === 'large') {
-        return true;
+        return (matchMedia(Foundation.media_queries.small).matches && matchMedia(Foundation.media_queries.medium).matches &&
+            !matchMedia(Foundation.media_queries.large).matches);
+        //return true;
+      } else if(sticky && this.large() && settings.sticky_on === 'large') {
+        return (matchMedia(Foundation.media_queries.small).matches && matchMedia(Foundation.media_queries.medium).matches &&
+            matchMedia(Foundation.media_queries.large).matches);
+        //return true;
       }
 
       return false;
     },
 
     toggle: function (toggleEl) {
-      var self = this;
+      var self = this,
+          topbar;
 
       if (toggleEl) {
-        var topbar = self.S(toggleEl).closest('[' + this.attr_name() + ']');
+        topbar = self.S(toggleEl).closest('[' + this.attr_name() + ']');
       } else {
-        var topbar = self.S('[' + this.attr_name() + ']');
+        topbar = self.S('[' + this.attr_name() + ']');
       }
 
       var settings = topbar.data(this.attr_name(true) + '-init');
@@ -14312,15 +14360,15 @@ return jQuery;
 
             window.scrollTo(0,0);
           } else {
-              topbar.parent().removeClass('expanded');
+            topbar.parent().removeClass('expanded');
           }
         }
       } else {
-        if(self.is_sticky(topbar, topbar.parent(), settings)) {
+        if (self.is_sticky(topbar, topbar.parent(), settings)) {
           topbar.parent().addClass('fixed');
         }
 
-        if(topbar.parent().hasClass('fixed')) {
+        if (topbar.parent().hasClass('fixed')) {
           if (!topbar.hasClass('expanded')) {
             topbar.removeClass('fixed');
             topbar.parent().removeClass('expanded');
@@ -14415,7 +14463,7 @@ return jQuery;
       
       S(window).off('.topbar').on('resize.fndtn.topbar', self.throttle(function () {
         self.resize.call(self);
-      }, 50)).trigger('resize');
+      }, 50)).trigger('resize').trigger('resize.fndtn.topbar');
 
       S('body').off('.topbar').on('click.fndtn.topbar touchstart.fndtn.topbar', function (e) {
         var parent = S(e.target).closest('li').closest('li.hover');
@@ -14522,8 +14570,7 @@ return jQuery;
     assemble : function (topbar) {
       var self = this,
           settings = topbar.data(this.attr_name(true) + '-init'),
-          section = self.S('section', topbar),
-          titlebar = $(this).children().filter('ul').first();
+          section = self.S('section', topbar);
 
       // Pull element out of the DOM for manipulation
       section.detach();
@@ -14531,14 +14578,11 @@ return jQuery;
       self.S('.has-dropdown>a', section).each(function () {
         var $link = self.S(this),
             $dropdown = $link.siblings('.dropdown'),
-            url = $link.attr('href');
+            url = $link.attr('href'),
+            $titleLi;
 
         if (!$dropdown.find('.title.back').length) {
-          if (settings.mobile_show_parent_link && url && url.length > 1) {
-            var $titleLi = $('<li class="title back js-generated"><h5><a href="javascript:void(0)"></a></h5></li><li><a class="parent-link js-generated" href="' + url + '">' + $link.text() +'</a></li>');
-          } else {
-            var $titleLi = $('<li class="title back js-generated"><h5><a href="javascript:void(0)"></a></h5></li>');
-          }
+          $titleLi = $('<li class="title back js-generated"><h5><a href="javascript:void(0)"></a></h5></li>');
   
           // Copy link to subnav
           if (settings.custom_back_text == true) {
@@ -14567,14 +14611,15 @@ return jQuery;
       var total = 0,
           self = this;
 
-      $('> li', ul).each(function () { total += self.S(this).outerHeight(true); });
+      $('> li', ul).each(function () { 
+        total += self.S(this).outerHeight(true); 
+      });
 
       return total;
     },
 
     sticky : function () {
-      var $window = this.S(window),
-          self = this;
+      var self = this;
 
       this.S(window).on('scroll', function() {
         self.update_sticky_positioning();
@@ -14623,7 +14668,7 @@ return jQuery;
 	"use strict";
 
 	// If picture is supported, well, that's awesome. Let's get outta here...
-	if( w.HTMLPictureElement ){
+	if ( w.HTMLPictureElement ) {
 		return;
 	}
 
@@ -14640,12 +14685,12 @@ return jQuery;
 	pf.srcsetSupported = new w.Image().srcset !== undefined;
 
 	// just a string trim workaround
-	pf.trim = function( str ){
+	pf.trim = function( str ) {
 		return str.trim ? str.trim() : str.replace( /^\s+|\s+$/g, "" );
 	};
 
 	// just a string endsWith workaround
-	pf.endsWith = function( str, suffix ){
+	pf.endsWith = function( str, suffix ) {
 		return str.endsWith ? str.endsWith( suffix ) : str.indexOf( suffix, str.length - suffix.length ) !== -1;
 	};
 
@@ -14667,52 +14712,57 @@ return jQuery;
 	 * Get width in css pixel value from a "length" value
 	 * http://dev.w3.org/csswg/css-values-3/#length-value
 	 */
-pf.getWidthFromLength = function( length ) {
-	// If no length was specified, or it is 0, default to `100vw` (per the spec).
-	length = length && parseFloat( length ) > 0 ? length : "100vw";
+	pf.getWidthFromLength = function( length ) {
+		// If no length was specified, or it is 0, default to `100vw` (per the spec).
+		length = length && parseFloat( length ) > 0 ? length : "100vw";
 
-	/**
-	* If length is specified in  `vw` units, use `%` instead since the div we’re measuring
-	* is injected at the top of the document.
-	*
-	* TODO: maybe we should put this behind a feature test for `vw`?
-	*/
-	length = length.replace( "vw", "%" );
+		/**
+		* If length is specified in  `vw` units, use `%` instead since the div we’re measuring
+		* is injected at the top of the document.
+		*
+		* TODO: maybe we should put this behind a feature test for `vw`?
+		*/
+		length = length.replace( "vw", "%" );
 
-	// Create a cached element for getting length value widths
-	if( !pf.lengthEl ){
-		pf.lengthEl = doc.createElement( "div" );
-		doc.documentElement.insertBefore( pf.lengthEl, doc.documentElement.firstChild );
-	}
+		// Create a cached element for getting length value widths
+		if ( !pf.lengthEl ) {
+			pf.lengthEl = doc.createElement( "div" );
+			doc.documentElement.insertBefore( pf.lengthEl, doc.documentElement.firstChild );
+		}
 
-	// Positioning styles help prevent padding/margin/width on `html` from throwing calculations off.
-	pf.lengthEl.style.cssText = "position: absolute; left: 0; width: " + length + ";";
-	// Using offsetWidth to get width from CSS
-	return pf.lengthEl.offsetWidth;
-};
+		// Positioning styles help prevent padding/margin/width on `html` from throwing calculations off.
+		pf.lengthEl.style.cssText = "position: absolute; left: 0; width: " + length + ";";
+		// Using offsetWidth to get width from CSS
+		return pf.lengthEl.offsetWidth;
+	};
 
 	// container of supported mime types that one might need to qualify before using
 	pf.types =  {};
 
+	// Add support for standard mime types.
+	pf.types["image/jpeg"] = true;
+	pf.types["image/gif"] = true;
+	pf.types["image/png"] = true;
+
 	// test svg support
-	pf.types[ "image/svg+xml" ] = doc.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Image', '1.1');
+	pf.types[ "image/svg+xml" ] = doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1");
 
 	// test webp support, only when the markup calls for it
-	pf.types[ "image/webp" ] = function(){
+	pf.types[ "image/webp" ] = function() {
 		// based on Modernizr's lossless img-webp test
 		// note: asynchronous
 		var img = new w.Image(),
 			type = "image/webp";
 
-		img.onerror = function(){
+		img.onerror = function() {
 			pf.types[ type ] = false;
 			picturefill();
 		};
-		img.onload = function(){
+		img.onload = function() {
 			pf.types[ type ] = img.width === 1;
 			picturefill();
 		};
-		img.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+		img.src = "data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=";
 	};
 
 	/**
@@ -14721,19 +14771,17 @@ pf.getWidthFromLength = function( length ) {
 	 * you can define them as a function that'll run only if that type needs to be tested. Just make the test function call picturefill again when it is complete.
 	 * see the async webp test above for example
 	 */
-	pf.verifyTypeSupport = function( source ){
+	pf.verifyTypeSupport = function( source ) {
 		var type = source.getAttribute( "type" );
 		// if type attribute exists, return test result, otherwise return true
-		if( type === null || type === "" ){
+		if ( type === null || type === "" ) {
 			return true;
-		}
-		else {
+		} else {
 			// if the type test is a function, run it and return "pending" status. The function will rerun picturefill on pending elements once finished.
-			if( typeof( pf.types[ type ] ) === "function" ){
+			if ( typeof( pf.types[ type ] ) === "function" ) {
 				pf.types[ type ]();
 				return "pending";
-			}
-			else {
+			} else {
 				return pf.types[ type ];
 			}
 		}
@@ -14759,7 +14807,7 @@ pf.getWidthFromLength = function( length ) {
 		var sourceSizeList = pf.trim( sourceSizeListStr ).split( /\s*,\s*/ ),
 			winningLength;
 
-		for ( var i=0, len=sourceSizeList.length; i < len; i++ ) {
+		for ( var i = 0, len = sourceSizeList.length; i < len; i++ ) {
 			// Match <media-condition>? length, ie ( min-width: 50em ) 100%
 			var sourceSize = sourceSizeList[ i ],
 				// Split "( min-width: 50em ) 100%" into separate strings
@@ -14783,6 +14831,103 @@ pf.getWidthFromLength = function( length ) {
 		return pf.getWidthFromLength( winningLength );
 	};
 
+	pf.parseSrcset = function( srcset ) {
+		/**
+		* A lot of this was pulled from Boris Smus’ parser for the now-defunct WHATWG `srcset`
+		* https://github.com/borismus/srcset-polyfill/blob/master/js/srcset-info.js
+		*
+		* 1. Let input (`srcset`) be the value passed to this algorithm.
+		* 2. Let position be a pointer into input, initially pointing at the start of the string.
+		* 3. Let raw candidates be an initially empty ordered list of URLs with associated 
+		*    unparsed descriptors. The order of entries in the list is the order in which entries 
+		*    are added to the list.
+		*/
+		var candidates = [];
+
+		while ( srcset !== "" ) {
+			srcset = srcset.replace(/^\s+/g,"");
+
+			// 5. Collect a sequence of characters that are not space characters, and let that be url.
+			var pos = srcset.search(/\s/g),
+				url, descriptor = null;
+
+			if ( pos !== -1 ) {
+				url = srcset.slice( 0, pos );
+
+				var last = url[ url.length - 1 ];
+
+				// 6. If url ends with a U+002C COMMA character (,), remove that character from url
+				// and let descriptors be the empty string. Otherwise, follow these substeps
+				// 6.1. If url is empty, then jump to the step labeled descriptor parser.
+
+				if ( last === "," || url === "" ) {
+					url = url.replace(/,+$/, "");
+					descriptor = "";
+				}
+				srcset = srcset.slice( pos + 1 );
+
+				// 6.2. Collect a sequence of characters that are not U+002C COMMA characters (,), and 
+				// let that be descriptors.
+				if ( descriptor === null ) {
+					var descpos = srcset.indexOf(",");
+					if ( descpos !== -1 ) {
+						descriptor = srcset.slice( 0, descpos );
+						srcset = srcset.slice( descpos + 1 );
+					} else {
+						descriptor = srcset;
+						srcset = "";
+					}
+				}
+			} else {
+				url = srcset;
+				srcset = "";
+			}
+
+			// 7. Add url to raw candidates, associated with descriptors.
+			if ( url || descriptor ) {
+				candidates.push({
+					url: url,
+					descriptor: descriptor
+				});
+			}
+		}
+		return candidates;
+	};
+
+	pf.parseDescriptor = function( descriptor, sizes ) {
+		// 11. Descriptor parser: Let candidates be an initially empty source set. The order of entries in the list 
+		// is the order in which entries are added to the list.
+		var sizeDescriptor = descriptor && descriptor.replace(/(^\s+|\s+$)/g, ""),
+			widthInCssPixels = sizes ? pf.findWidthFromSourceSize( sizes ) : "100%",
+			resCandidate;
+
+			if ( sizeDescriptor ) {
+				var splitDescriptor = sizeDescriptor.split(" ");
+
+				for (var i = splitDescriptor.length + 1; i >= 0; i--) {
+
+					var curr = splitDescriptor[ i ],
+						lastchar = curr && curr.slice( curr.length - 1 );
+
+					if ( lastchar === "w" || lastchar === "x" ) {
+						resCandidate = curr;
+					}
+					if ( sizes && resCandidate ) {
+						// get the dpr by taking the length / width in css pixels
+						resCandidate = parseFloat( ( parseInt( curr, 10 ) / widthInCssPixels ) );
+					} else {
+						// get the dpr by grabbing the value of Nx
+						var res = curr && parseFloat( curr, 10 );
+
+						resCandidate = res && !isNaN( res ) && lastchar === "x" || lastchar === "w" ? res : 1;
+					}
+				}
+			} else {
+				resCandidate = 1;
+			}
+		return resCandidate;
+	};
+
 	/**
 	 * Takes a srcset in the form of url/
 	 * ex. "images/pic-medium.png 1x, images/pic-medium-2x.png 2x" or
@@ -14794,31 +14939,16 @@ pf.getWidthFromLength = function( length ) {
 	 * If sizes is specified, resolution is calculated
 	 */
 	pf.getCandidatesFromSourceSet = function( srcset, sizes ) {
-		var candidates = pf.trim( srcset ).split( /,\s+/ ),
-			widthInCssPixels = sizes ? pf.findWidthFromSourceSize( sizes ) : "100%",
+		var candidates = pf.parseSrcset( srcset ),
 			formattedCandidates = [];
 
 		for ( var i = 0, len = candidates.length; i < len; i++ ) {
-			var candidate = candidates[ i ],
-				candidateArr = candidate.split( /\s+/ ),
-				sizeDescriptor = candidateArr[ 1 ],
-				resolution;
-			if ( sizeDescriptor && ( sizeDescriptor.slice( -1 ) === "w" || sizeDescriptor.slice( -1 ) === "x" ) ) {
-				sizeDescriptor = sizeDescriptor.slice( 0, -1 );
-			}
-			if ( sizes ) {
-				// get the dpr by taking the length / width in css pixels
-				resolution = parseFloat( ( parseInt( sizeDescriptor, 10 ) / widthInCssPixels ) );
-			} else {
-				// get the dpr by grabbing the value of Nx
-				resolution = sizeDescriptor ? parseFloat( sizeDescriptor, 10 ) : 1;
-			}
+			var candidate = candidates[ i ];
 
-			var formattedCandidate = {
-				url: candidateArr[ 0 ],
-				resolution: resolution
-			};
-			formattedCandidates.push( formattedCandidate );
+			formattedCandidates.push({
+				url: candidate.url,
+				resolution: pf.parseDescriptor( candidate.descriptor, sizes )
+			});
 		}
 		return formattedCandidates;
 	};
@@ -14829,8 +14959,8 @@ pf.getWidthFromLength = function( length ) {
 	 * (the property's existence infers native srcset support, and a srcset-supporting browser will prioritize srcset's value over our winning picture candidate)
 	 * this moves srcset's value to memory for later use and removes the attr
 	 */
-	pf.dodgeSrcset = function( img ){
-		if( img.srcset ){
+	pf.dodgeSrcset = function( img ) {
+		if ( img.srcset ) {
 			img[ pf.ns ].srcset = img.srcset;
 			img.removeAttribute( "srcset" );
 		}
@@ -14845,11 +14975,11 @@ pf.getWidthFromLength = function( length ) {
 			candidates = [];
 
 		// if it's an img element, use the cached srcset property (defined or not)
-		if( el.nodeName.toUpperCase() === "IMG" && el[ pf.ns ] && el[ pf.ns ].srcset ){
+		if ( el.nodeName.toUpperCase() === "IMG" && el[ pf.ns ] && el[ pf.ns ].srcset ) {
 			srcset = el[ pf.ns ].srcset;
 		}
 
-		if( srcset ) {
+		if ( srcset ) {
 			candidates = pf.getCandidatesFromSourceSet( srcset, sizes );
 		}
 		return candidates;
@@ -14865,8 +14995,8 @@ pf.getWidthFromLength = function( length ) {
 		length = candidates.length;
 		bestCandidate = candidates[ length - 1 ];
 
-		for ( var l=0; l < length; l++ ) {
-			candidate = candidates[ l ];
+		for ( var i = 0; i < length; i++ ) {
+			candidate = candidates[ i ];
 			if ( candidate.resolution >= pf.getDpr() ) {
 				bestCandidate = candidate;
 				break;
@@ -14886,13 +15016,13 @@ pf.getWidthFromLength = function( length ) {
 	};
 
 	/*
-	 * In IE9, <source> elements get removed if they aren"t children of
+	 * In IE9, <source> elements get removed if they aren't children of
 	 * video elements. Thus, we conditionally wrap source elements
 	 * using <!--[if IE 9]><video style="display: none;"><![endif]-->
 	 * and must account for that here by moving those source elements
 	 * back into the picture element.
 	 */
-	pf.removeVideoShim = function( picture ){
+	pf.removeVideoShim = function( picture ) {
 		var videos = picture.getElementsByTagName( "video" );
 		if ( videos.length ) {
 			var video = videos[ 0 ],
@@ -14916,10 +15046,9 @@ pf.getWidthFromLength = function( length ) {
 			imgs = doc.getElementsByTagName( "img" );
 
 		for ( var h = 0, len = pictures.length + imgs.length; h < len; h++ ) {
-			if ( h < pictures.length ){
+			if ( h < pictures.length ) {
 				elems[ h ] = pictures[ h ];
-			}
-			else {
+			} else {
 				var currImg = imgs[ h - pictures.length ];
 
 				if ( currImg.parentNode.nodeName.toUpperCase() !== "PICTURE" &&
@@ -14937,22 +15066,22 @@ pf.getWidthFromLength = function( length ) {
 			match;
 
 		// Go through each child, and if they have media queries, evaluate them
-		for ( var j=0, slen = sources.length; j < slen; j++ ) {
+		for ( var j = 0, slen = sources.length; j < slen; j++ ) {
 			var source = sources[ j ];
 
 			// ignore non-element nodes
-			if( source.nodeType !== 1 ){
+			if ( source.nodeType !== 1 ) {
 				continue;
 			}
 
 			// Hitting an `img` element stops the search for `sources`.
 			// If no previous `source` matches, the `img` itself is evaluated later.
-			if( source.nodeName.toUpperCase() === "IMG" ) {
+			if ( source.nodeName.toUpperCase() === "IMG" ) {
 				return match;
 			}
 
 			// ignore non-`source` nodes
-			if( source.nodeName.toUpperCase() !== "SOURCE" ){
+			if ( source.nodeName.toUpperCase() !== "SOURCE" ) {
 				continue;
 			}
 
@@ -14963,14 +15092,14 @@ pf.getWidthFromLength = function( length ) {
 				continue;
 			}
 
-			// if there"s no media specified, OR w.matchMedia is supported
-			if( ( !media || pf.matchesMedia( media ) ) ){
+			// if there's no media specified, OR w.matchMedia is supported
+			if ( ( !media || pf.matchesMedia( media ) ) ) {
 				var typeSupported = pf.verifyTypeSupport( source );
 
-				if( typeSupported === true ){
+				if ( typeSupported === true ) {
 					match = source;
 					break;
-				} else if( typeSupported === "pending" ){
+				} else if ( typeSupported === "pending" ) {
 					return false;
 				}
 			}
@@ -14991,7 +15120,7 @@ pf.getWidthFromLength = function( length ) {
 		elements = options.elements || pf.getAllElements();
 
 		// Loop through all elements
-		for ( var i=0, plen = elements.length; i < plen; i++ ) {
+		for ( var i = 0, plen = elements.length; i < plen; i++ ) {
 			element = elements[ i ];
 			elemType = element.nodeName.toUpperCase();
 			firstMatch = undefined;
@@ -14999,7 +15128,7 @@ pf.getWidthFromLength = function( length ) {
 			picImg = undefined;
 
 			// expando for caching data on the img
-			if( !element[ pf.ns ] ){
+			if ( !element[ pf.ns ] ) {
 				element[ pf.ns ] = {};
 			}
 
@@ -15011,7 +15140,7 @@ pf.getWidthFromLength = function( length ) {
 			}
 
 			// if element is a picture element
-			if( elemType === "PICTURE" ){
+			if ( elemType === "PICTURE" ) {
 
 				// IE9 video workaround
 				pf.removeVideoShim( element );
@@ -15024,7 +15153,7 @@ pf.getWidthFromLength = function( length ) {
 				// if any sources are pending in this picture due to async type test(s)
 				// remove the evaluated attr and skip for now ( the pending test will
 				// rerun picturefill on this element when complete)
-				if( firstMatch === false ) {
+				if ( firstMatch === false ) {
 					continue;
 				}
 
@@ -15036,15 +15165,15 @@ pf.getWidthFromLength = function( length ) {
 				picImg = element;
 			}
 
-			if( picImg ) {
+			if ( picImg ) {
 
 				// expando for caching data on the img
-				if( !picImg[ pf.ns ] ){
+				if ( !picImg[ pf.ns ] ) {
 					picImg[ pf.ns ] = {};
 				}
 
 				// Cache and remove `srcset` if present and we’re going to be doing `sizes`/`picture` polyfilling to it.
-				if( picImg.srcset && ( elemType === "PICTURE" || picImg.getAttribute( "sizes" ) ) ){
+				if ( picImg.srcset && ( elemType === "PICTURE" || picImg.getAttribute( "sizes" ) ) ) {
 					pf.dodgeSrcset( picImg );
 				}
 
@@ -15055,7 +15184,7 @@ pf.getWidthFromLength = function( length ) {
 					// No sources matched, so we’re down to processing the inner `img` as a source.
 					candidates = pf.processSourceSet( picImg );
 
-					if( picImg.srcset === undefined || picImg.getAttribute( "sizes" ) ) {
+					if ( picImg.srcset === undefined || picImg[ pf.ns ].srcset ) {
 						// Either `srcset` is completely unsupported, or we need to polyfill `sizes` functionality.
 						pf.applyBestCandidate( candidates, picImg );
 					} // Else, resolution-only `srcset` is supported natively.
@@ -15074,22 +15203,26 @@ pf.getWidthFromLength = function( length ) {
 	 */
 	function runPicturefill() {
 		picturefill();
-		var intervalId = setInterval( function(){
+		var intervalId = setInterval( function() {
 			// When the document has finished loading, stop checking for new images
 			// https://github.com/ded/domready/blob/master/ready.js#L15
-			w.picturefill();
+			picturefill();
 			if ( /^loaded|^i|^c/.test( doc.readyState ) ) {
 				clearInterval( intervalId );
 				return;
 			}
 		}, 250 );
-		if( w.addEventListener ){
+		if ( w.addEventListener ) {
 			var resizeThrottle;
 			w.addEventListener( "resize", function() {
-				w.clearTimeout( resizeThrottle );
-				resizeThrottle = w.setTimeout( function(){
-					picturefill({ reevaluate: true });
-				}, 60 );
+				if (!w._picturefillWorking) {
+					w._picturefillWorking = true;
+					w.clearTimeout( resizeThrottle );
+					resizeThrottle = w.setTimeout( function() {
+						picturefill({ reevaluate: true });
+						w._picturefillWorking = false;
+					}, 60 );
+				}
 			}, false );
 		}
 	}
@@ -15100,15 +15233,13 @@ pf.getWidthFromLength = function( length ) {
 	picturefill._ = pf;
 
 	/* expose picturefill */
-	if ( typeof module === "object" && typeof module.exports === "object" ){
+	if ( typeof module === "object" && typeof module.exports === "object" ) {
 		// CommonJS, just export
 		module.exports = picturefill;
-	}
-	else if( typeof define === "object" && define.amd ){
+	} else if ( typeof define === "function" && define.amd ){
 		// AMD support
-		define( function(){ return picturefill; } );
-	}
-	else if( typeof w === "object" ){
+		define( function() { return picturefill; } );
+	} else if ( typeof w === "object" ) {
 		// If no AMD and we are in the browser, attach to window
 		w.picturefill = picturefill;
 	}

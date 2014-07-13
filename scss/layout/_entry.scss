@@ -60,17 +60,19 @@
     }
 
     p:last-of-type {
-            &:after {
-                content:" ■";
-                color:$black;
-            }
+        &:after {
+            content:" ■";
+            color:$black;
         }
+    }    
 
-        &.no-dot {
-            &:after {
-                content:"";
-            }
+    .no-dot {
+        &:after {
+            content:"" !important;
+            color:$black;
+        }
     }
+
 
     @include headings() {
         @extend .entry__row;
