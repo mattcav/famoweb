@@ -28,11 +28,8 @@
     );
 
     overflow-y:auto;
-    max-width:30rem;
 
     @media #{$medium-up}{
-      max-width:100%;
-
       .next--menu-item {
         height:auto;
         max-height:rem-calc(600);

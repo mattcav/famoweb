@@ -107,6 +107,29 @@ function vimeo_metabox( $meta_boxes ) {
 add_filter( 'cmb_meta_boxes', 'vimeo_metabox' );
 
 
+function color_metabox( $meta_boxes ) {
+    $prefix = '_famo_'; // Prefix for all fields
+    $meta_boxes['color'] = array(
+        'id' => 'color',
+        'title' => 'Colore',
+        'pages' => array('post'), // post type
+        'context' => 'normal',
+        'priority' => 'high',
+        'show_names' => true, // Show field names on the left
+        'fields' => array(
+                    array(
+                        'name' => 'Colore di riferimento',
+                        'desc' => 'se questo articolo non ha foto, assegnagli almeno un colore!',
+                        'id' => $prefix . 'color',
+                        'type' => 'text'
+                    ),
+            ),
+    );
+
+    return $meta_boxes;
+}
+add_filter( 'cmb_meta_boxes', 'color_metabox' );
+
 // Initialize the metabox class
 add_action( 'init', 'be_initialize_cmb_meta_boxes', 9999 );
 function be_initialize_cmb_meta_boxes() {
