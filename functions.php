@@ -35,7 +35,17 @@ require_once('lib/nav.php'); // filter default wordpress menu classes and clean 
 5. lib/metabox.php
     - add custom metaboxes 
 */
-//require_once('lib/metabox.php');
+require_once('lib/metabox.php');
+/*
+6. lib/custom-post-types.php
+    - add custom post types 
+*/
+require_once('lib/custom-post-types.php');
+/*
+7. lib/connections.php
+    - create connections between posts - posts 2 posts required
+*/
+require_once('lib/connections.php');    
 
 /**********************
 Add theme supports
@@ -52,6 +62,15 @@ if( ! function_exists( 'famo_theme_support' ) ) {
         add_image_size('fd-lrg', 1024, 99999);
         add_image_size('fd-med', 768, 99999);
         add_image_size('fd-sm', 320, 9999);
+
+        add_image_size('cover', 640, 9999);
+        add_image_size('cover@2x', 1280, 9999);
+
+        add_image_size('cover-medium', 760, 9999);
+        add_image_size('cover-medium@2x', 1520, 9999);
+
+        add_image_size('cover-large', 1440, 9999);
+        add_image_size('cover-large@2x', 2880, 9999);
 
         // rss thingy
         add_theme_support('automatic-feed-links');

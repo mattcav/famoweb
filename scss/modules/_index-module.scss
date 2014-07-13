@@ -9,7 +9,7 @@
         margin:1rem 0 1rem;
 
         @include grid-column(
-            $columns:6,
+            $columns:12,
             $collapse:false
         );
     }
@@ -23,6 +23,7 @@
 .index-module__header {
     display:flex;
     align-items:baseline;
+    padding:0 1rem;
 }
 
 .index-module__id {
@@ -37,6 +38,5 @@
 
 .index-module__title {
   display:inline-block;
-  padding:0 1rem;
   font-size:rem-calc(23);
 }

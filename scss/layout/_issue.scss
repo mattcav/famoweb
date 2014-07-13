@@ -1,46 +1,70 @@
 .issue__container {
-    background-color:pink;
-    overflow: hidden;
-    background: {
-        color:$white;
-        image:url('../img/texture.jpg');
+    height:100%;
+    min-height:100vh;
+}
+
+.entry--issue {
+    @media #{$large-up} {
+        @include grid-column(
+            $columns:8,
+            $collapse:true
+        );
+    }
+
+    @media #{$xlarge-up}{
+        @include grid-column(
+            $columns:9,
+            $collapse:true
+        );
     }
 }
 
 .issue {
-     @include grid-column(
-                $columns:12,
-                $float:right
-            );
-    padding:2rem 1rem 15rem;
-    max-width:48rem;
+    @include grid-column(
+        $columns:12,
+        $float:none,
+        $center:true,
+        $collapse:true
+    );
+
+    overflow-y:auto;
+    max-width:30rem;
+
+    @media #{$medium-up}{
+      max-width:100%;
+
+      .next--menu-item {
+        height:auto;
+        max-height:rem-calc(600);
+      }
+    }
 
     @media #{$large-up}{
         @include grid-column(
-                $columns:8,
-                $float:right
-            );
-        padding:0;
-        position:relative;
-        z-index:10;
-        margin-top:-5px;
+            $columns:4,
+            $float:right,
+            $collapse:true
+        );
+        @include position(absolute, top 0 right 0);
+        height:100%;
+        overflow-y:auto;
+
+        .next__title {
+            font-size:rem-calc(23);
+        }
     }
 
     @media #{$xlarge-up}{
-        max-width:100%;
         @include grid-column(
-                $columns:6,
-                $float:right,
-                $collapse:true
-            );
+            $columns:3,
+            $float:right,
+            $collapse:true
+        );
     }
 }
 
 .issue__inner {
     padding:0 0 1rem;
-    @media #{$large-up}{
-        padding:3rem 1rem 4rem;
-    }
 }
 
 .issue__video {

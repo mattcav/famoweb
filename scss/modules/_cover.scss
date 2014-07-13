@@ -1,26 +1,26 @@
 .cover {
-      margin:0;
-      @media #{$large-up} {
-        height:80vh;
-        position:relative;
+    margin:0;
+    position:relative;
+    display:flex;
+    justify-content:center;
+
+    @media #{$landscape} {
+        max-height:rem-calc(400);
         overflow: hidden;
-        display:flex;
-        justify-content:center;
-      }
+    }
+
+    @media #{$xlarge-up} {
+        max-height:75vh;
+    }
+
 }
 
 .cover--top {
-    @media #{$large-up} {
-        align-items:flex-start;
-    }
+    align-items:flex-start;
 }
 .cover--bottom {
-    @media #{$large-up} {
-        align-items:flex-end;
-    }
+    align-items:flex-end;
 }
 .cover--center {
-    @media #{$large-up} {
-        align-items:center;
-    }
+    align-items:center;
 }

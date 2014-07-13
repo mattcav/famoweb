@@ -4,5 +4,9 @@
         );
 } 
 
-
-
+.palette__item {
+    display:block;
+    float:left;
+    height:5px;
+    width:20%;
+}

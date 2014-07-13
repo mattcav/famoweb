@@ -20,7 +20,7 @@ if (!empty( $next_post )):
                 echo 'cover--bottom';
             }; ?>">
         <a href="<?php echo $permalink; ?>" class="next__link">  
-            <picture>
+            <picture class="cover__picture">
                 <!--[if IE 9]><video style="display: none;"><![endif]-->
                 <source srcset="<?php echo $cover_large[0] ?>" media="(min-width: 1200px)">
                 <source srcset="<?php echo $cover_medium[0] ?>" media="(min-width: 650px)">
@@ -32,7 +32,7 @@ if (!empty( $next_post )):
             <div class="next__bg"></div>
             
             <header class="next__header">
-                <p class="next__message">Ancora su Famo #02</p>
+                <p class="next__message">Ancora su FAMO #02</p>
                 <h1 class="title next__title">
                 <?php echo $title; ?>
                 </h1>

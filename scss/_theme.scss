@@ -3,12 +3,6 @@
 .justify {
      text-align:justify;
         
-     -ms-word-break: break-all;
-         word-break: break-all;
-
-         // Non standard for webkit
-         word-break: break-word;
-
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
             hyphens: auto;
@@ -19,11 +13,16 @@
     line-height:1;
     span {
         font-weight:300;
-        &:before {
-            content: "\A";
-            white-space: pre;
-        }
+        display:block;
+        // &:before {
+        //     content: "\A";
+        //     white-space: pre;
+        // }
     }
+}
+
+.flex-video.formato-pazzo {
+    padding-bottom:38% !important;
 }
 
 

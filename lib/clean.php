@@ -135,7 +135,7 @@ if( ! function_exists( 'famo_scripts_and_styles ' ) ) {
 	    // if( get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
 	    
 	    // adding scripts file in the footer
-	    wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/app.min.js', '', '', true );
+	    wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/app.js', '', '', true );
 	    
 	    global $is_IE;
 	    if ($is_IE) {

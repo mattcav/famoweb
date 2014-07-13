@@ -6,8 +6,8 @@
 	<?php /* Start loop */ ?>
 	<?php while (have_posts()) : the_post(); ?>
 
-		<?php get_template_part('conntent', 'article'); ?>		
-		<?php //comments_template(); ?>
+		<?php get_template_part('content', 'article'); ?>	
+        
 	<?php endwhile; // End the loop ?>
 
 	<?php get_template_part('component', 'next'); ?>

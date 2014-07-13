@@ -1,3 +1,5 @@
-<aside id="sidebar" class="small-12 large-4 columns">
-	<?php dynamic_sidebar("Sidebar"); ?>
+<aside id="sidebar" class="sidebar st-menu st-effect-14">
+
+        <?php get_template_part('nav', 'issue'); ?>
 </aside><!-- /#sidebar -->
+

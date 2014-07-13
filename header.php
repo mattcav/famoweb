@@ -11,7 +11,7 @@
 	<title><?php wp_title('|', true, 'right'); bloginfo('name'); ?></title>
 
 	<!-- Mobile viewport optimized: j.mp/bplateviewport -->
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 	<?php get_template_part('meta'); ?>
 
@@ -21,9 +21,10 @@
 
 <body <?php body_class('antialiased'); ?>>
 
-<!-- <header class="contain-to-grid">
-	
-</header> -->
+<div id="st-container" class="st-container">
+<?php //get_sidebar(); ?>
+<div class="st-pusher">
 
 <!-- Start the main container -->
-<div class="container" role="document">
+<div class="st-content" role="document">
+<div class="st-content-inner" >

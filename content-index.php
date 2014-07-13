@@ -11,7 +11,6 @@
     <a href="<?php the_permalink(); ?>">
 
         <header class="index-module__header entry__row">
-            <h3 class="index-module__id">&#9632;</h3>
             <h2 class="title index-module__title"><?php the_title(); ?></h2>
         </header>
     </a>

@@ -4,7 +4,8 @@
         $collapse:true
         );
 
-    .cover {
+    .cover,
+    .videoCover {
         margin-bottom:2rem;
         @media #{$medium-up} {
             margin-bottom:3rem;
@@ -22,7 +23,9 @@
     margin: 0 0 1rem;
 }
 
-
+.entry__date {
+    margin-bottom:0;
+}
 
 .entry__excerpt {
     text-transform:uppercase;
@@ -46,13 +49,27 @@
 
 
 .entry__content {
-    p {
+    p,
+    .video-container {
         @extend .entry__row;
         @extend .justify;
         @media #{$medium-up} {
             padding-left:2rem;
             padding-right:2rem;
         }
+    }
+
+    p:last-of-type {
+            &:after {
+                content:" ■";
+                color:$black;
+            }
+        }
+
+        &.no-dot {
+            &:after {
+                content:"";
+            }
     }
 
     @include headings() {
@@ -110,10 +127,16 @@
 
 .entry.format-chat {
     h2 {
+        margin-bottom:0;
+
         font: {
             style:italic;
             size:1rem;
             weight:400;
+        }
+
+        span {
+            font-style:normal;
         }
     }
 }

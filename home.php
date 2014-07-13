@@ -1,52 +1,81 @@
 <?php get_header(); ?>
 
-<!-- Row for main content area -->
-    <main id="content" role="main" class="issue__container">
+<?php
+$args = array(
+        'post_type'=>'numeri',
+        'posts_per_page'=> 1
+    );
 
-          
+// The Query
+$issue_query = new WP_Query( $args );
 
+// The Loop
+if ( $issue_query->have_posts() ) {
+    while ( $issue_query->have_posts() ) {
+        $issue_query->the_post(); 
+        // vars
+        $id = get_the_id();
+        $palette = get_post_meta( $id, '_famo_palette_group', true );
+        $pdf = get_post_meta( $id, '_famo_pdf', true );
+        $vimeo = get_post_meta( $id, '_famo_vimeo', true );
+    ?>
 
-        <article class="issue">
-           <div class="issue__inner bg-white">
+    <main id="content" role="main" class="issue__container home__container clearfix">
+        <article class="entry entry--issue">
                 
-                
-                <section class="video__container">
-                    <canvas id="video-canvas" height="100" width="100"></canvas>
-                    <video id="video-cover" height="100" width="100" class="issue__video" controls loop autoplay="autoplay" muted poster="http://disegnatoperte.com/famo/wp-content/themes/famo/img/poster.jpg">
-                      <source src="<?php bloginfo('template_directory'); ?>/img/video.webm" type='video/webm;codecs="vp8, vorbis"'>
-                      <source src="<?php bloginfo('template_directory'); ?>/img/video.mp4" type='video/mp4;codecs="avc1.42E01E, mp4a.40.2"'>
-                      <img src="http://disegnatoperte.com/famo/wp-content/themes/famo/img/poster.jpg" alt="FAMO 02">
-                    </video>
-                </section> 
+                <?php if($vimeo): ?>
+                    <section class="videoCover flex-video widescreen vimeo">
+                        <iframe src="//player.vimeo.com/video/<?php echo $vimeo; ?>?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff&amp;loop=0&amp;autoplay=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </section>
+                <?php endif; ?>    
 
-                <header class="issue-header">
-                    <h1 class="issue-header__title">
-                        #02
-                        <img class="issue-header__img" src="<?php bloginfo('template_directory'); ?>/img/famo.svg" alt="FAMO">
-                    </h1>
+                <header class="entry__header entry__row">
+                    <p class="entry__date"><?php the_date('F Y'); ?></p>
+                    <h2 class="title entry__title"><?php the_title(); ?></h2>
+                    <?php famo_entry_meta(); ?>
                 </header>
 
+                <section class="entry__content hyphenate">
+                    <?php the_content(); ?>
+                </section>
 
-                <?php if ( have_posts() ) : ?>
-                    <?php /* Start the Loop */ ?>
-                    <?php while ( have_posts() ) : the_post(); ?>
-                        <?php get_template_part( 'content', 'index' ); ?>
-                    <?php endwhile; ?>
-                    
-                    <?php else : ?>
-                        <?php get_template_part( 'content', 'none' ); ?>
-                
-                <?php endif; // end have_posts() check ?>
-           </div>
+                <section class="entry__content">
+                    <p>
+                        <?php if($pdf) : ?>
+                            <a href="<?php echo $pdf; ?>">Scarica il pdf</a>
+                        <?php endif; ?>
+                    </p>
+                    <?php
+                        if($palette) :
+                            echo '<p class="palette clearfix">';
+                            foreach ( (array) $palette as $key => $entry ) {
+                                $paletteColor = '';
+
+                                echo '<span class="palette__item" style="background-color:'. $entry['paletteColor'] .';">';           
+                                echo '</span>';        
+                            }
+                            echo '</p>';    
+                        endif;
+                    ?>
+                    <p class="no-dot">
+                        <img src="<?php bloginfo('template_directory'); ?>/img/istruzioni.jpg" alt="Scarica, stampa, leggi!">
+                    </p>
+                </section>
         </article>
-
-
-    
-
-
-
-    <?php //get_template_part('nav'); ?>
-
+ 
+        <section class="issue">
+           <div class="issue__inner bg-white">    
+                <?php get_template_part('nav', 'issue'); ?>
+           </div>
+        </section>
     </main>
-        
+
+<?php    }
+
+} else {
+    // no posts found
+}
+/* Restore original Post Data */
+wp_reset_postdata(); ?>
+
 <?php get_footer(); ?>
