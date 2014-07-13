@@ -31,10 +31,10 @@ module.exports = function(grunt) {
       app: {
         src: [
             'bower_components/jquery/dist/jquery.js', 
-            'bower_components/foundation/js/foundation.js',
             'bower_components/picturefill/src/picturefill.js',
+            'bower_components/snap.svg/dist/snap.svg-min.js',
             'js/vendor/hyphrenator.js',
-            'js/page-transition.js',
+            'js/snap.config.js',
             'js/app.js'
         ],
         dest: 'js/build/app.js',

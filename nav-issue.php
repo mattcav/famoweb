@@ -1,19 +1,16 @@
 <?php
     if ( 'numeri' == get_post_type() ) :
         $issue = $post->ID;
+    
     else :
-        $article_id = $post->ID;
-        $parent_query = new WP_Query( array(
+        $article_ID = $post->ID;
+        $connected = get_posts( array(
           'connected_type' => 'post2numeri',
-          'connected_items' => $article_id,
-          'nopaging' => true,
+          'connected_items' => $article_ID,
+          'suppress_filters' => false
         ) );
-        if ( $parent_query->have_posts() ) {
-            while ( $parent_query->have_posts() ) {
-               $issue =  get_the_id();    
-            }    
-        }
-        wp_reset_postdata();    
+
+        $issue = $connected[0]->ID;
     endif;
 
     $menu_query = new WP_Query( array(

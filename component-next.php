@@ -10,6 +10,14 @@ if (!empty( $next_post )):
     $cover_medium = wp_get_attachment_image_src($cover_id, 'large'); 
     $cover_large = wp_get_attachment_image_src($cover_id, 'full'); 
     $cover_alt = get_post_meta($cover_id , '_wp_attachment_image_alt', true);
+
+    $connected = get_posts( array(
+      'connected_type' => 'post2numeri',
+      'connected_items' => $postID,
+      'suppress_filters' => false
+    ) );
+
+    $issueID = $connected[0]->ID;
 ?>
 
     <article class="cover next <?php if ($cover_align == 'center') {
@@ -32,7 +40,7 @@ if (!empty( $next_post )):
             <div class="next__bg"></div>
             
             <header class="next__header">
-                <p class="next__message">Ancora su FAMO #02</p>
+                <p class="next__message"><?php echo get_the_title($issueID); ?></p>
                 <h1 class="title next__title">
                 <?php echo $title; ?>
                 </h1>

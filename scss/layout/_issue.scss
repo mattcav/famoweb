@@ -48,10 +48,6 @@
         @include position(absolute, top 0 right 0);
         height:100%;
         overflow-y:auto;
-
-        .next__title {
-            font-size:rem-calc(23);
-        }
     }
 
     @media #{$xlarge-up}{

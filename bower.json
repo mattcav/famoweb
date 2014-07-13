@@ -6,6 +6,7 @@
     "foundation": "zurb/bower-foundation"
   },
   "devDependencies": {
-    "picturefill": "~2.1.0"
+    "picturefill": "~2.1.0",
+    "snap.svg": "~0.3.0"
   }
 }

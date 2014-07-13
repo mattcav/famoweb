@@ -13,6 +13,9 @@
     }    
 }
 
+.entry__container {
+    position:relative;
+}
 
 .entry__cover-img {
     @include center-el();    
@@ -85,7 +88,7 @@
     img {
         width:100%;
         height:auto;
-        margin: 0 0 1rem;
+        margin: 0 0 1.25rem;
     }
     
     .alignnone {

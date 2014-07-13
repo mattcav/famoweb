@@ -13,7 +13,7 @@
 	<!-- Mobile viewport optimized: j.mp/bplateviewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<?php get_template_part('meta'); ?>
+	<?php //get_template_part('meta'); ?>
 
 <?php wp_head(); ?>
 
@@ -22,7 +22,11 @@
 <body <?php body_class('antialiased'); ?>>
 
 <div id="st-container" class="st-container">
-<?php //get_sidebar(); ?>
+<?php 
+    if(!is_front_page()):
+        get_sidebar();
+    endif;
+?>
 <div class="st-pusher">
 
 <!-- Start the main container -->

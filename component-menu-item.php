@@ -1,8 +1,7 @@
 <?php
-$next_post = get_adjacent_post();
-if (!empty( $next_post )): 
-    $postID = $next_post->ID;
-    $title = $next_post->post_title;
+if (!empty( $post )): 
+    $postID = $post->ID;
+    $title = $post->post_title;
     $permalink = get_permalink( $postID );
     $cover_align = get_post_meta($postID, 'cover', true);
     $cover_id = get_post_thumbnail_id($postID); 
@@ -25,7 +24,7 @@ if (!empty( $next_post )):
                 <source srcset="<?php echo $cover_medium[0] ?>" media="(min-width: 650px)">
                 <source srcset="<?php echo $cover_small[0] ?>">
                 <!--[if IE 9]></video><![endif]-->
-                <img srcset="<?php echo $cover_large[0] ?>" alt="<?php echo $cover_alt ?>" class="entry__cover-img">
+                <img srcset="<?php echo $cover_small[0] ?>" alt="<?php echo $cover_alt ?>" class="entry__cover-img">
             </picture>
 
             <div class="next__bg"></div>

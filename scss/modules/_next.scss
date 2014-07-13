@@ -6,6 +6,14 @@
             $columns:12,
             $collapse:true
         );
+
+    &:hover,
+    &:active,
+    &:focus {
+        .next__bg {
+            background:rgba(0, 0, 0, 0);
+        }
+    }
 }
 
 .next__header {
@@ -37,6 +45,7 @@
 
 .next__bg {
     @include position(absolute, top 0 left 0 right 0 bottom 0);
+    transition: background 300ms ease-in-out 0ms;
     background:rgba(0, 0, 0, 0.6);
 }
 
@@ -48,4 +57,12 @@
     min-height:1px;
     height:12.5rem;
     overflow: hidden;
+
+    .next__title {
+        font-size:rem-calc(18);
+
+        @media #{$large-up} {
+            font-size:rem-calc(23);
+        }
+    }
 }

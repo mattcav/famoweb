@@ -2,6 +2,11 @@
 
 <!-- Row for main content area -->
 	<main class="entry__container" id="content" role="main">
+
+    <button class="st-toggle">
+        <span class="si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross">
+        </span>
+    </button>
 	
 	<?php /* Start loop */ ?>
 	<?php while (have_posts()) : the_post(); ?>
