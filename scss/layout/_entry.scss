@@ -28,6 +28,7 @@
 
 .entry__date {
     margin-bottom:0;
+    text-transform:uppercase;
 }
 
 .entry__excerpt {
@@ -72,10 +73,14 @@
     .no-dot {
         &:after {
             content:"" !important;
-            color:$black;
         }
     }
 
+    &.no-dots {
+        p:after {
+            content:"" !important;
+        }
+    }
 
     @include headings() {
         @extend .entry__row;
@@ -92,12 +97,13 @@
     }
     
     .alignnone {
-        margin: 1rem 0;
+        margin: 0 0 1.25rem
+        ;
     }
 
     .aligncenter {
         @extend .entry__row;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
         @include center-el();
     }
 
@@ -128,6 +134,7 @@
         }
     }
 }
+
 
 
 .entry.format-chat {

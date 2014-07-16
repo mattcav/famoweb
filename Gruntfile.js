@@ -33,9 +33,10 @@ module.exports = function(grunt) {
             'bower_components/jquery/dist/jquery.js', 
             'bower_components/picturefill/src/picturefill.js',
             'bower_components/snap.svg/dist/snap.svg-min.js',
+            'bower_components/fastclick/lib/fastclick.js', 
             'js/vendor/hyphrenator.js',
-            'js/snap.config.js',
-            'js/app.js'
+            'js/app.js',
+            'js/snap.config.js'
         ],
         dest: 'js/build/app.js',
       }

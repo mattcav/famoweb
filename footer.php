@@ -1,7 +1,12 @@
-</div><!-- container End -->
-</div><!-- pusher End -->
+</div><!-- content__inner End -->
 </div><!-- content End -->
-</div><!-- content-inner End -->
+</div><!-- pusher End -->
+<?php 
+    if(!is_front_page()):
+        get_sidebar();
+    endif;
+?>
+</div><!-- container End -->
 
 
 <?php wp_footer(); ?>

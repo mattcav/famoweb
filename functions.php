@@ -45,7 +45,12 @@ require_once('lib/custom-post-types.php');
 7. lib/connections.php
     - create connections between posts - posts 2 posts required
 */
-require_once('lib/connections.php');    
+require_once('lib/connections.php');
+/*
+8. lib/gallery.php
+    - gallery shortcode
+*/
+require_once('lib/gallery.php');       
 
 /**********************
 Add theme supports
@@ -137,9 +142,32 @@ function filter_ptags_on_images($content){
 
 add_filter('the_content', 'filter_ptags_on_images');
 
+// order for posts
+function wpse73190_gist_adjacent_post_where($sql) {
+  if ( !is_main_query() || !is_singular() )
+    return $sql;
 
+  $the_post = get_post( get_the_ID() );
+  $patterns = array();
+  $patterns[] = '/post_date/';
+  $patterns[] = '/\'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\'/';
+  $replacements = array();
+  $replacements[] = 'menu_order';
+  $replacements[] = $the_post->menu_order;
+  return preg_replace( $patterns, $replacements, $sql );
+}
+add_filter( 'get_next_post_where', 'wpse73190_gist_adjacent_post_where' );
+add_filter( 'get_previous_post_where', 'wpse73190_gist_adjacent_post_where' );
 
+function wpse73190_gist_adjacent_post_sort($sql) {
+  if ( !is_main_query() || !is_singular() )
+    return $sql;
 
-
+  $pattern = '/post_date/';
+  $replacement = 'menu_order';
+  return preg_replace( $pattern, $replacement, $sql );
+}
+add_filter( 'get_next_post_sort', 'wpse73190_gist_adjacent_post_sort' );
+add_filter( 'get_previous_post_sort', 'wpse73190_gist_adjacent_post_sort' );
 
 ?>

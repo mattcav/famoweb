@@ -15,7 +15,6 @@ if ( $issue_query->have_posts() ) {
         $issue_query->the_post(); 
         // vars
         $id = get_the_id();
-        $palette = get_post_meta( $id, '_famo_palette_group', true );
         $pdf = get_post_meta( $id, '_famo_pdf', true );
         $vimeo = get_post_meta( $id, '_famo_vimeo', true );
     ?>
@@ -30,40 +29,28 @@ if ( $issue_query->have_posts() ) {
                 <?php endif; ?>    
 
                 <header class="entry__header entry__row">
-                    <p class="entry__date"><?php the_date('F Y'); ?></p>
                     <h2 class="title entry__title"><?php the_title(); ?></h2>
+                    <p class="entry__date"><?php the_date('F Y'); ?></p>
                     <?php famo_entry_meta(); ?>
                 </header>
 
-                <section class="entry__content hyphenate">
+                <section class="entry__content hyphenate no-dots">
                     <?php the_content(); ?>
                 </section>
 
-                <section class="entry__content">
-                    <p>
-                        <?php if($pdf) : ?>
-                            <a href="<?php echo $pdf; ?>">Scarica il pdf</a>
-                        <?php endif; ?>
-                    </p>
-                    <?php
-                        if($palette) :
-                            echo '<p class="palette clearfix">';
-                            foreach ( (array) $palette as $key => $entry ) {
-                                $paletteColor = '';
+                <section id="baguette" class="entry__row baguette">
+                    <?php if($pdf) : ?>
+                        <button id="baguetteButton" type="button" class="baguette__trigger small">FAMO Baguette</button>
 
-                                echo '<span class="palette__item" style="background-color:'. $entry['paletteColor'] .';">';           
-                                echo '</span>';        
-                            }
-                            echo '</p>';    
-                        endif;
-                    ?>
-                    <p class="no-dot">
-                        <img src="<?php bloginfo('template_directory'); ?>/img/istruzioni.jpg" alt="Scarica, stampa, leggi!">
-                    </p>
+                        <section class="baguette__inner">
+                            <a class="baguette__link" href="<?php echo $pdf; ?>">Scarica il pdf</a>
+                            <img class="baguette__img" src="<?php bloginfo('template_directory'); ?>/img/istruzioni.jpg" alt="Scarica, stampa, leggi!">
+                        </section>
+                    <?php endif; ?>
                 </section>
         </article>
  
-        <section class="issue">
+        <section class="issue clearfix">
            <div class="issue__inner bg-white">    
                 <?php get_template_part('nav', 'issue'); ?>
            </div>

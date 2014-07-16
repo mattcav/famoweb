@@ -4,12 +4,21 @@
         ?>
         <article <?php post_class('entry page') ?> id="post-<?php the_ID(); ?>"> 
             <?php get_template_part('component', 'cover'); ?>
+
+            <?php get_template_part('component', 'audiomood'); ?> 
         
             <header class="entry__header entry__row">
                 <h1 class="title entry__title"><?php the_title(); ?></h1>
-                <?php famo_entry_meta(); ?>
+                
                 <?php if($extraCredits): ?>
-                    <p><?php echo $extraCredits; ?></p>
+                    <section class="extraCredits">
+                        <p>
+                            <?php famo_entry_meta(); ?><br>
+                            <?php echo $extraCredits; ?>
+                        </p>
+                    </section>
+                <?php else: ?>
+                    <?php famo_entry_meta(); ?>    
                 <?php endif; ?>    
 
                 <p class="entry__excerpt">

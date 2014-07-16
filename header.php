@@ -22,13 +22,8 @@
 <body <?php body_class('antialiased'); ?>>
 
 <div id="st-container" class="st-container">
-<?php 
-    if(!is_front_page()):
-        get_sidebar();
-    endif;
-?>
-<div class="st-pusher">
 
+<div class="st-pusher">
 <!-- Start the main container -->
 <div class="st-content" role="document">
 <div class="st-content-inner" >

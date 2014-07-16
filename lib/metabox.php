@@ -130,6 +130,56 @@ function color_metabox( $meta_boxes ) {
 }
 add_filter( 'cmb_meta_boxes', 'color_metabox' );
 
+
+function number_metabox( $meta_boxes ) {
+    $prefix = '_famo_'; // Prefix for all fields
+    $meta_boxes['number'] = array(
+        'id' => 'number',
+        'title' => 'Numero progressivo',
+        'pages' => array('numeri'), // post type
+        'context' => 'normal',
+        'priority' => 'high',
+        'show_names' => true, // Show field names on the left
+        'fields' => array(
+                    array(
+                        'name' => 'Numero progressivo',
+                        'desc' => 'Il numero di uscita di questo FAMO. Due cifre - es: 05',
+                        'id' => $prefix . 'number',
+                        'type' => 'text'
+                    ),
+            ),
+    );
+
+    return $meta_boxes;
+}
+add_filter( 'cmb_meta_boxes', 'number_metabox' );
+
+
+
+function audiomood_metabox( $meta_boxes ) {
+    $prefix = '_famo_'; // Prefix for all fields
+    $meta_boxes['audiomood'] = array(
+        'id' => 'audiomood',
+        'title' => 'Audiomood',
+        'pages' => array('post'), // post type
+        'context' => 'normal',
+        'priority' => 'high',
+        'show_names' => true, // Show field names on the left
+        'fields' => array(
+                    array(
+                        'name' => 'SoundCloud',
+                        'desc' => 'Aggiungi SoundCloud link',
+                        'id' => $prefix . 'audiomood',
+                        'type' => 'text'
+                    ),
+            ),
+    );
+
+    return $meta_boxes;
+}
+add_filter( 'cmb_meta_boxes', 'audiomood_metabox' );
+
+
 // Initialize the metabox class
 add_action( 'init', 'be_initialize_cmb_meta_boxes', 9999 );
 function be_initialize_cmb_meta_boxes() {
