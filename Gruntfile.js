@@ -39,13 +39,29 @@ module.exports = function(grunt) {
             'js/snap.config.js'
         ],
         dest: 'js/build/app.js',
-      }
+      },
+      home: {
+        src: [
+            'bower_components/jquery/dist/jquery.js', 
+            'bower_components/picturefill/src/picturefill.js',
+            'bower_components/fastclick/lib/fastclick.js', 
+            'js/vendor/hyphrenator.js',
+            'js/app.js'
+        ],
+        dest: 'js/build/home.js',
+      },
+
     },
 
     uglify: {
        app: {
           files: {
             'js/build/app.min.js': ['js/build/app.js']
+          }
+        },
+        home: {
+          files: {
+            'js/build/home.min.js': ['js/build/home.js']
           }
         }
     },

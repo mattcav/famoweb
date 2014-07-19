@@ -1,8 +1,6 @@
 <?php get_header(); ?>
 
-    <button class="st-toggle">
-        <span class="si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross">
-        </span>
+    <button class="st-toggle si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross">
     </button>
 
 <!-- Row for main content area -->

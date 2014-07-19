@@ -1,3 +1,22 @@
+
+<meta property="og:title" content="<?php the_title(); ?> | FAMO">
+<?php $fb_image = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID() ), 'medium'); ?>
+<?php if ($fb_image) : ?>
+    <meta property="og:image" content="<?php echo $fb_image[0]; ?>" />
+<?php endif; ?>
+<meta property="og:type" content="<?php
+    if (is_single() || is_page()) { echo "article"; } else { echo "website";} ?>">
+<meta property="og:site_name" content="Famo">
+<meta property="og:description" content="<?php echo strip_tags(get_the_excerpt()); ?>">
+<meta property="og:url" content="<?php the_permalink(); ?>">
+<meta property="article:publisher" content="https://www.facebook.com/famoweb">
+ 
+
+ 
+<meta name="description" content="Le opere, ma anche gli artisti. Non il personaggio, ma la persona. Un punto di vista differente, obliquo, riflesso, per guardare sopra, sotto e dietro...">
+<link rel="canonical" href="http://larosadeiventi.famoweb.it/">
+
+
 <!-- Favicon and Feed -->
     <link rel="shortcut icon" type="image/png" href="<?php echo get_template_directory_uri(); ?>/favicon.png">
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?> Feed" href="<?php echo home_url(); ?>/feed/">
