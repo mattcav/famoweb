@@ -22,13 +22,14 @@
 }
 
 
-.entry__header {
+.entry__header,
+.entry__footer {
     margin: 0 0 1rem;
 }
 
 .entry__date {
     margin-bottom:0;
-    text-transform:uppercase;
+    text-transform:capitalize;
 }
 
 .entry__excerpt {

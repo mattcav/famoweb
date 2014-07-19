@@ -3,6 +3,7 @@
             $extraCredits = get_post_meta( $id, '_famo_extraCredits', true );
         ?>
         <article <?php post_class('entry page') ?> id="post-<?php the_ID(); ?>"> 
+            <?php get_template_part('component', 'odb-head'); ?>
             <?php get_template_part('component', 'cover'); ?>
 
             <?php get_template_part('component', 'audiomood'); ?> 

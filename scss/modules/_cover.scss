@@ -5,12 +5,16 @@
     justify-content:center;
 
     @media #{$landscape} {
-        max-height:rem-calc(400);
+        max-height:rem-calc(500);
         overflow: hidden;
     }
 
     @media #{$xlarge-up} {
-        max-height:75vh;
+        max-height:80vh;
+    }
+
+    @media #{$xlarge-up} and (min-height:1080px) {
+        max-height:1000vh;
     }
 
 }

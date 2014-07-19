@@ -77,3 +77,13 @@
         transform: translate3d(0, 0, 0);
     }
 }
+
+.odb {
+    margin:0;
+    color:$white;
+    padding:0 1rem;
+    @include position(absolute, top 0 right 0 left 0);
+    z-index:10;
+    text-transform:uppercase;
+    font-weight:700;
+}

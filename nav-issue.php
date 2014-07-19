@@ -14,33 +14,51 @@
 
     $palette = get_post_meta( $issue, '_famo_palette_group', true );
     $issueNumber = get_post_meta( $issue, '_famo_number', true );
+    $issueName = get_the_title($issue);
     //$issueLink = get_permalink( $issue );
     $issueLink = get_bloginfo( 'url' );
+
+    if($palette) {
+      $firstItem = reset($palette);
+      $firstColor= array_values($firstItem);
+      $issueColor = $firstColor[0];
+    }
 ?>
 
 <header class="issueHeader">
   <h2 class="issueHeader__title">
     <a href="<?php echo $issueLink; ?>" class="issueHeader__link">
       <img class="issueHeader__img" src="<?php bloginfo('template_directory'); ?>/img/famo.svg" alt="FAMO">
-      <span class="issueHeader__number">
+      <!-- <span class="issueHeader__number">
         #<?php echo $issueNumber; ?>
-      </span>
+      </span> -->
     </a>
   </h2>
 </header>
 
 <?php
-  if($palette) :
-      echo '<p class="palette clearfix">';
-      foreach ( (array) $palette as $key => $entry ) {
-          $paletteColor = '';
+  // if($palette) :
+  //     echo '<p class="palette clearfix">';
+  //     foreach ( (array) $palette as $key => $entry ) {
+  //         $paletteColor = '';
 
-          echo '<span class="palette__item" style="background-color:'. $entry['paletteColor'] .';">';           
-          echo '</span>';        
-      }
-      echo '</p>';    
-  endif;
+  //         echo '<span class="palette__item" style="background-color:'. $entry['paletteColor'] .';">';           
+  //         echo '</span>';        
+  //     }
+  //     echo '</p>';    
+  // endif;
 ?>
+<?php if($palette) : ?>
+      <section class="issueName" style="background-color: <?php echo $issueColor; ?>">
+        <a href="<?php echo $issueLink; ?>" class="issueName__link">
+          <h2 class="issueName__title">
+            <?php echo $issueName; ?>
+          </h2>  
+        </a>
+      </section>
+<?php endif;
+?>
+
 
 <?php
 

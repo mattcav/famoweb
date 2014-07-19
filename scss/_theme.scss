@@ -39,3 +39,38 @@
     background:$white;
     color:$black;
 }
+
+// shame
+
+.video-container {
+    p {
+        clear: both;
+        float: none;
+        font-size: 0.75rem;
+        margin: 0 auto;
+        max-width: 62rem;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+        width: 100%;
+        &:after {
+            border-bottom: 1px dotted #707070;
+            content: "";
+            display: block;
+            padding-top: 0.75rem;
+            width: 100%;
+        }
+    }
+
+    &.video-container--gallery {
+        max-width:63.1rem;
+        clear:both;
+    }
+}
+
+.video-container--isCaption {
+    margin-bottom:1.25rem;
+    p {
+        margin-bottom:0;
+    }
+}

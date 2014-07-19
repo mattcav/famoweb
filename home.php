@@ -30,7 +30,6 @@ if ( $issue_query->have_posts() ) {
 
                 <header class="entry__header entry__row">
                     <h2 class="title entry__title"><?php the_title(); ?></h2>
-                    <p class="entry__date"><?php the_date('F Y'); ?></p>
                     <?php famo_entry_meta(); ?>
                 </header>
 
@@ -48,6 +47,10 @@ if ( $issue_query->have_posts() ) {
                         </section>
                     <?php endif; ?>
                 </section>
+
+                <footer class="entry__footer entry__row">
+                    <p class="entry__date"><?php the_date('F Y'); ?></p>
+                </footer>
         </article>
  
         <section class="issue clearfix">
@@ -55,6 +58,8 @@ if ( $issue_query->have_posts() ) {
                 <?php get_template_part('nav', 'issue'); ?>
            </div>
         </section>
+
+
     </main>
 
 <?php    }

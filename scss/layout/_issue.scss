@@ -41,10 +41,10 @@
         .issueHeader__img {
             width:rem-calc(220);
         }
-        .issueHeader__number {
-            font-size:rem-calc(64);
-            margin-left:rem-calc(10);
-        }
+        // .issueHeader__number {
+        //     font-size:rem-calc(64);
+        //     margin-left:rem-calc(10);
+        // }
     }
 
     @media #{$large-up}{
@@ -113,3 +113,15 @@
     font-weight:100;
 }
 
+
+.issueName {
+    padding:0 1rem;
+    overflow: hidden;
+    text-align:center;
+}
+
+.issueName__title {
+    color:$white;
+    text-transform:uppercase;
+    font-size:rem-calc(18)
+}

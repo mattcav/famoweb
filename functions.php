@@ -50,7 +50,12 @@ require_once('lib/connections.php');
 8. lib/gallery.php
     - gallery shortcode
 */
-require_once('lib/gallery.php');       
+require_once('lib/gallery.php'); 
+/*
+9. lib/taxonomies.php
+    - create taxonomies
+*/
+require_once('lib/taxonomies.php');           
 
 /**********************
 Add theme supports
