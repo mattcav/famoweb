@@ -1,0 +1,22 @@
+.segni {
+    p{
+        &:before {
+            content:"";
+            background-image:url('../img/sprites/sprites.svg');
+            width:32px;
+            height:32px;
+            display:inline-block;
+            margin-right:.5rem;
+        }
+    }
+}
+
+ @for $i from 1 through 12 {
+  .segni p:nth-child(#{$i}) {
+    &:before {
+        $position: ($i * 64) + (-768);
+        background-position:$position+px, 0;
+    }
+  }
+}
+

@@ -1,17 +1,23 @@
-
-<meta property="og:title" content="<?php the_title(); ?> | FAMO">
-<?php $fb_image = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID() ), 'medium'); ?>
-<?php if ($fb_image) : ?>
-    <meta property="og:image" content="<?php echo $fb_image[0]; ?>" />
-<?php endif; ?>
-<meta property="og:type" content="<?php
-    if (is_single() || is_page()) { echo "article"; } else { echo "website";} ?>">
-<meta property="og:site_name" content="Famo">
-<meta property="og:description" content="<?php echo strip_tags(get_the_excerpt()); ?>">
-<meta property="og:url" content="<?php the_permalink(); ?>">
-<meta property="article:publisher" content="https://www.facebook.com/famoweb">
- 
-
+<?php if (is_single()) { 
+    $id = $post->ID;
+    $fb_image = wp_get_attachment_image_src(get_post_thumbnail_id( $id ), 'medium');
+    $excerpt = get_the_excerpt();  
+?>  
+    <meta property="og:title" content="<?php echo get_the_title($id); ?> | FAMO">
+    <?php if ($fb_image) : ?>
+        <meta property="og:image" content="<?php echo $fb_image[0]; ?>" />
+    <?php endif; ?>
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Famo">
+    <meta property="og:description" content="<?php echo $excerpt; ?>">
+    <meta property="og:url" content="<?php echo get_permalink($id); ?>">
+    <meta property="article:publisher" content="https://www.facebook.com/famoweb">
+<?php } else { ?>  
+    <meta property="og:site_name" content="<?php bloginfo('name'); ?>" />  
+    <meta property="og:description" content="<?php bloginfo('description'); ?>" />  
+    <meta property="og:type" content="website" />  
+    <meta property="og:image" content="http://larosadeiventi.famoweb.it/wp-content/uploads/01-Cover-page03.jpg" /> 
+<?php } ?>  
  
 <meta name="description" content="Le opere, ma anche gli artisti. Non il personaggio, ma la persona. Un punto di vista differente, obliquo, riflesso, per guardare sopra, sotto e dietro...">
 <link rel="canonical" href="http://larosadeiventi.famoweb.it/">

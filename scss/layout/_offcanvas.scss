@@ -79,13 +79,12 @@ body,
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 100;
     visibility: hidden;
     width: 270px;
     height: 100%;
     background: $white;
     transition: all 0.5s;
-    overflow:auto;
+    overflow:hidden;
 }
 
 .st-menu::after {
@@ -122,6 +121,7 @@ body,
 }
 
 .st-menu-open .st-menu {
+    overflow-y:auto;
     visibility: visible;
     transition: transform 0.5s;
     transform: translate3d(0, 0, 0);

@@ -24,7 +24,7 @@ if ( $issue_query->have_posts() ) {
                 
                 <?php if($vimeo): ?>
                     <section class="videoCover flex-video widescreen vimeo">
-                        <iframe src="//player.vimeo.com/video/<?php echo $vimeo; ?>?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff&amp;loop=0&amp;autoplay=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                        <iframe src="http://player.vimeo.com/video/<?php echo $vimeo; ?>?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff&amp;loop=0&amp;autoplay=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                     </section>
                 <?php endif; ?>    
 

@@ -3,20 +3,20 @@
     position:relative;
     display:flex;
     justify-content:center;
+    overflow: hidden;
 
-    @media #{$landscape} {
+    @media #{$landscape} and (max-width:1024px){
         max-height:rem-calc(500);
         overflow: hidden;
     }
 
-    @media #{$xlarge-up} {
+    @media all and (min-width:1025px) {
         max-height:80vh;
     }
 
     @media #{$xlarge-up} and (min-height:1080px) {
         max-height:1000vh;
     }
-
 }
 
 .cover--top {
@@ -27,4 +27,12 @@
 }
 .cover--center {
     align-items:center;
+}
+
+.entry {
+    .cover {
+        @media all and (min-width:1025px) {
+            height:80vh;
+        }
+    }
 }

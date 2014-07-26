@@ -22,7 +22,7 @@ if (!empty( $next_post )):
     $issueNumber = get_post_meta( $issue, '_famo_number', true );
 ?>
 
-    <article class="cover next <?php if ($cover_align == 'center') {
+    <article class="cover cover--next next <?php if ($cover_align == 'center') {
                 echo 'cover--center';
             } elseif ($cover_align == 'top') {
                 echo 'cover--top';
@@ -52,9 +52,7 @@ if (!empty( $next_post )):
                 </h1>
             </header>
         </a>    
-    </article>    
-
-
+    </article>
 
 <?php else : 
     $connected = get_posts( array(
@@ -109,6 +107,6 @@ if (!empty( $next_post )):
             </header>
         </a>    
     </article>
-
-
 <?php endif; ?>
+
+<link rel="prefetch" href="<?php echo get_permalink($postID); ?>">    

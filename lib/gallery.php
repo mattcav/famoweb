@@ -190,6 +190,7 @@ function famo_gallery_shortcode( $attr ) {
     </{$icontag}>";
     if ( $captiontag && trim($attachment->post_excerpt) ) {
     $output .= "
+    <div class='gallery-caption__bg'></div>
     <{$captiontag} class='wp-caption-text gallery-caption'>
     " . wptexturize($attachment->post_excerpt) . "
     </{$captiontag}>";

@@ -136,9 +136,9 @@ if( ! function_exists( 'famo_scripts_and_styles ' ) ) {
 	    
 	    // adding scripts file in the footer
 	    if ( is_home()) :
-	    	wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/home.js', '', '', true );
+	    	wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/home.min.js', '', '', true );
 	    else :
-	    	wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/app.js', '', '', true );
+	    	wp_register_script( 'famo-js', get_template_directory_uri() . '/js/build/app.min.js', '', '', true );
 	    endif;
 	    
 	    global $is_IE;
@@ -148,7 +148,7 @@ if( ! function_exists( 'famo_scripts_and_styles ' ) ) {
 
 	    // enqueue styles and scripts
 	    //wp_enqueue_script( 'famo-modernizr' );
-	    wp_enqueue_style( 'google-font' );
+	    //wp_enqueue_style( 'google-font' );
 	   // wp_enqueue_style('famo-ie-only');
 	    /*
 	    I recommend using a plugin to call jQuery

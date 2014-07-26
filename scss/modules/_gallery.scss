@@ -82,14 +82,20 @@
     transition: opacity 0.35s, transform 0.35s;
 }
 
+.gallery-caption__bg {
+    transition: opacity 0.35s, transform 0.35s;
+    opacity:0;
+    @include position(absolute, top 0 right .5rem bottom 0 left .5rem);
+    background-color:$black;
+}
+
 
 .gallery-item:hover,
 .galery-item:active,
 .gallery-item:focus {
 
-    .galler__cover-img {
+    .gallery-caption__bg {
         opacity:0.5;
-        transform:scale(1.1);
     }
     
     .gallery-caption {
