@@ -40,6 +40,7 @@ function register_cpt_numeri() {
     );
 
     register_post_type( 'numeri', $args );
+    flush_rewrite_rules();
 }
 
 
